@@ -1,0 +1,23 @@
+server = "127.0.0.1:14028"
+key_id = "office"
+vkey = "replace-with-a-random-shared-key"
+transport = "tls"
+
+[trust]
+mode = "pinned"
+# 必须换成服务端证书的真实指纹；以下只是格式占位。
+fingerprint = "0000000000000000000000000000000000000000000000000000000000000000"
+
+[remote]
+enabled = true
+
+# 所有远端隧道和健康探针都必须符合本机设置的目标边界。
+[remote.target_policy]
+allow = ["127.0.0.0/8", "::1"]
+ports = [3000]
+
+# 可选：预先授权文件目录；不配置就不能下发文件服务。
+# [remote.file_root.documents]
+# path = "/path/to/documents"
+# read_only = true
+# 服务端下发的 file.root 使用 "documents" 或 "documents/subdirectory"。

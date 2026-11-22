@@ -1,0 +1,21 @@
+server = "127.0.0.1:14028"
+key_id = "office"
+vkey = "replace-office-node-key"
+transport = "tls"
+[p2p]
+enabled = true
+max_sessions = 64
+[trust]
+mode = "pinned"
+# Replace with the real server certificate SHA-256 fingerprint.
+fingerprint = "0000000000000000000000000000000000000000000000000000000000000000"
+[[tunnel]]
+id = 1
+mode = "tcp"
+public = false
+backend = [{addr = "127.0.0.1:3000"}]
+[[tunnel]]
+id = 2
+mode = "udp"
+public = false
+backend = [{addr = "127.0.0.1:5353"}]

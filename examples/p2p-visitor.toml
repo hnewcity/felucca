@@ -1,0 +1,21 @@
+server = "127.0.0.1:14028"
+key_id = "laptop"
+vkey = "replace-laptop-node-key"
+transport = "tls"
+[trust]
+mode = "pinned"
+# Replace with the real server certificate SHA-256 fingerprint.
+fingerprint = "0000000000000000000000000000000000000000000000000000000000000000"
+[[visitor]]
+name = "office-web"
+share = "office-web"
+secret = "replace-this-shared-secret"
+bind = "127.0.0.1:18080"
+connection = "prefer_direct" # relay | prefer_direct | direct
+[[visitor]]
+name = "office-dns"
+share = "office-dns"
+secret = "replace-this-shared-secret"
+bind = "127.0.0.1:15353"
+mode = "udp"
+connection = "prefer_direct"

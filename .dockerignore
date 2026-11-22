@@ -1,0 +1,14 @@
+.git
+.github
+target
+conf
+**/*.pem
+**/*.key
+**/*.local.toml
+**/__pycache__
+docs
+examples
+**/node_modules
+apps/admin/dist
+apps/admin/.env*
+CLAUDE.md

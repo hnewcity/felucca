@@ -1,0 +1,64 @@
+name: felucca
+
+services:
+  server:
+    image: felucca-server:local
+    build:
+      context: .
+      target: server
+    container_name: felucca-server
+    restart: unless-stopped
+    init: true
+    stop_grace_period: 30s
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    # OrbStack forwards host-network listeners to the Mac, including loopback.
+    # This also makes dynamically configured tunnel ports available.
+    network_mode: host
+    environment:
+      FELUCCA_AGENT_ASSETS: /opt/felucca-agents
+    volumes:
+      - type: bind
+        source: ./conf/orbstack/config
+        target: /etc/felucca
+        read_only: true
+        bind:
+          create_host_path: false
+      - server-data:/data
+      - type: bind
+        source: ./conf/orbstack/agents
+        target: /opt/felucca-agents
+        read_only: true
+        bind:
+          create_host_path: false
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - --fail
+        - --silent
+        - --show-error
+        - --output
+        - /dev/null
+        - --max-time
+        - "3"
+        - --header
+        - "Host: 127.0.0.1:8088"
+        - http://127.0.0.1:8088/
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  server-data:

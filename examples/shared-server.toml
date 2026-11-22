@@ -1,0 +1,21 @@
+allowed_ports = [{ from = 9000, to = 9100 }]
+
+[bridge]
+bind = "0.0.0.0:8443"
+# The QUIC bridge and HTTP/3 share one UDP listener, with separate certificates.
+quic_bind = "0.0.0.0:8443"
+tls = { cert = "conf/bridge.pem", key = "conf/bridge.key" }
+cert_reload_interval = "30s"
+
+[http]
+bind = "0.0.0.0:8443"
+tls_bind = "0.0.0.0:8443"
+http3_bind = "0.0.0.0:8443"
+cert_reload_interval = "30s"
+certificates."app.example.com" = { cert = "conf/app.pem", key = "conf/app.key" }
+
+[client.agent-1]
+vkey = "replace-with-the-same-random-key-as-the-agent"
+allow_config_push = true
+max_tunnels = 16
+max_connections = 100

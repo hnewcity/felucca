@@ -1,0 +1,41 @@
+# Runs entirely on the server; no agent process or bridge credentials required.
+[bridge]
+bind = "127.0.0.1:14028"
+
+[user.office]
+[user.office.limits]
+max_connections = 100
+
+[local.office]
+user = "office"
+dial_timeout = "10s"
+[local.office.network]
+local_ip = "127.0.0.1"
+forward_local_ip = true
+
+[[local.office.tunnel]]
+id = 1
+mode = "tcp"
+port = 9001
+bind = "127.0.0.1"
+backend = [{ addr = "127.0.0.1:3000" }]
+[local.office.tunnel.health]
+type = "tcp"
+interval = "10s"
+timeout = "2s"
+
+[[local.office.tunnel]]
+id = 2
+mode = "tcp"
+port = 9002
+bind = "127.0.0.1"
+backend = [{ addr = "tunnel://local.office/1" }]
+
+# Other aliases:
+# tunnel://agent-1/7      existing route on an authenticated agent
+# file://local.office/3  a route with mode=file, keeping file.auth and confinement
+# bridge://tcp          operator-owned local group (without user), real bridge auth
+# bridge://tls          bridge TLS certificate and authentication
+# bridge://ws           bridge WebSocket path and authentication
+# bridge://wss          bridge TLS + WebSocket
+# bridge://http          server HTTP ingress, preserving Host/site authentication

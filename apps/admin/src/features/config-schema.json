@@ -1,0 +1,1862 @@
+{
+  "AclMode": {
+    "type": "enum",
+    "options": [
+      "off",
+      "allow",
+      "deny"
+    ]
+  },
+  "AcmeChallenge": {
+    "type": "enum",
+    "options": [
+      "http-01",
+      "tls-alpn-01"
+    ]
+  },
+  "AcmeConfig": {
+    "type": "object",
+    "fields": {
+      "zerossl_api_key": {
+        "type": "secret",
+        "nullable": true,
+        "optional": true
+      },
+      "challenge": {
+        "ref": "AcmeChallenge",
+        "optional": true
+      },
+      "eab": {
+        "ref": "ExternalAccountBinding",
+        "nullable": true,
+        "optional": true
+      },
+      "email": {
+        "type": "string",
+        "optional": false
+      },
+      "cache_dir": {
+        "type": "string",
+        "optional": true
+      },
+      "directory": {
+        "type": "string",
+        "optional": true
+      },
+      "staging": {
+        "type": "boolean",
+        "optional": true
+      },
+      "domains": {
+        "type": "array",
+        "item": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "renew_before": {
+        "type": "duration",
+        "optional": true
+      },
+      "accept_tos": {
+        "type": "boolean",
+        "optional": true
+      }
+    }
+  },
+  "AdminAccount": {
+    "type": "object",
+    "fields": {
+      "role": {
+        "ref": "AdminRole",
+        "optional": false
+      },
+      "user": {
+        "type": "string",
+        "nullable": true,
+        "optional": true
+      },
+      "password_hash": {
+        "type": "secret",
+        "optional": false
+      },
+      "token_hash": {
+        "type": "secret",
+        "nullable": true,
+        "optional": true
+      },
+      "disabled": {
+        "type": "boolean",
+        "optional": true
+      }
+    }
+  },
+  "AdminConfig": {
+    "type": "object",
+    "fields": {
+      "profiling": {
+        "type": "boolean",
+        "optional": true
+      },
+      "bind": {
+        "type": "string",
+        "optional": false
+      },
+      "state_path": {
+        "type": "string",
+        "optional": false
+      },
+      "tls": {
+        "ref": "TlsConfig",
+        "nullable": true,
+        "optional": true
+      },
+      "origin": {
+        "type": "string",
+        "nullable": true,
+        "optional": true
+      },
+      "session_ttl": {
+        "type": "duration",
+        "optional": true
+      },
+      "max_sessions": {
+        "type": "number",
+        "min": 0,
+        "max": 9007199254740991,
+        "optional": true
+      },
+      "account": {
+        "type": "map",
+        "item": {
+          "ref": "AdminAccount"
+        },
+        "optional": true
+      }
+    }
+  },
+  "AdminRole": {
+    "type": "enum",
+    "options": [
+      "admin",
+      "operator",
+      "viewer"
+    ]
+  },
+  "AgentConfig": {
+    "type": "object",
+    "fields": {
+      "p2p": {
+        "ref": "P2pAgentConfig",
+        "optional": true
+      },
+      "visitor": {
+        "type": "array",
+        "item": {
+          "ref": "VisitorConfig"
+        },
+        "optional": true
+      },
+      "remote": {
+        "ref": "RemotePolicy",
+        "optional": true
+      },
+      "kcp": {
+        "ref": "KcpConfig",
+        "optional": true
+      },
+      "ntp": {
+        "ref": "NtpConfig",
+        "nullable": true,
+        "optional": true
+      },
+      "network": {
+        "ref": "NetworkConfig",
+        "optional": true
+      },
+      "geo": {
+        "ref": "GeoFiles",
+        "optional": true
+      },
+      "mapping": {
+        "type": "array",
+        "item": {
+          "ref": "PortMapping"
+        },
+        "optional": true
+      },
+      "mux": {
+        "ref": "MuxConfig",
+        "optional": true
+      },
+      "server": {
+        "type": "string",
+        "optional": false
+      },
+      "vkey": {
+        "type": "secret",
+        "optional": false
+      },
+      "key_id": {
+        "type": "string",
+        "nullable": true,
+        "optional": true
+      },
+      "transport": {
+        "ref": "TransportKind",
+        "optional": true
+      },
+      "trust": {
+        "ref": "TrustPolicy",
+        "optional": true
+      },
+      "ws_path": {
+        "type": "string",
+        "optional": true
+      },
+      "reconnect_min": {
+        "type": "duration",
+        "optional": true
+      },
+      "reconnect_max": {
+        "type": "duration",
+        "optional": true
+      },
+      "dial_timeout": {
+        "type": "duration",
+        "optional": true
+      },
+      "max_connections": {
+        "type": "number",
+        "min": 0,
+        "max": 9007199254740991,
+        "nullable": true,
+        "optional": true
+      },
+      "tunnel": {
+        "type": "array",
+        "item": {
+          "ref": "TunnelConfig"
+        },
+        "optional": true
+      }
+    }
+  },
+  "Authentication": {
+    "type": "object",
+    "fields": {
+      "users": {
+        "type": "map",
+        "item": {
+          "type": "secret"
+        },
+        "optional": true
+      }
+    }
+  },
+  "Backend": {
+    "type": "object",
+    "fields": {
+      "addr": {
+        "type": "string",
+        "optional": false
+      },
+      "weight": {
+        "type": "number",
+        "min": 0,
+        "max": 4294967295,
+        "optional": true
+      },
+      "tls": {
+        "type": "boolean",
+        "optional": true
+      },
+      "trust": {
+        "ref": "TrustPolicy",
+        "optional": true
+      }
+    }
+  },
+  "BridgeConfig": {
+    "type": "object",
+    "fields": {
+      "kcp_bind": {
+        "type": "string",
+        "nullable": true,
+        "optional": true
+      },
+      "kcp": {
+        "ref": "KcpConfig",
+        "optional": true
+      },
+      "cert_reload_interval": {
+        "type": "duration",
+        "optional": true
+      },
+      "proxy_accept": {
+        "ref": "ProxyAccept",
+        "optional": true
+      },
+      "mux": {
+        "ref": "MuxConfig",
+        "optional": true
+      },
+      "bind": {
+        "type": "string",
+        "optional": true
+      },
+      "quic_bind": {
+        "type": "string",
+        "nullable": true,
+        "optional": true
+      },
+      "ws_path": {
+        "type": "string",
+        "optional": true
+      },
+      "tls": {
+        "ref": "TlsConfig",
+        "nullable": true,
+        "optional": true
+      },
+      "disconnect_timeout": {
+        "type": "duration",
+        "optional": true
+      },
+      "strict_clock": {
+        "type": "boolean",
+        "optional": true
+      }
+    }
+  },
+  "CallbackConfig": {
+    "type": "object",
+    "fields": {
+      "selector": {
+        "ref": "EventSelector",
+        "optional": true
+      },
+      "content": {
+        "ref": "EventContent",
+        "optional": true
+      },
+      "enabled": {
+        "type": "boolean",
+        "optional": true
+      },
+      "url": {
+        "type": "string",
+        "optional": false
+      },
+      "signing_key": {
+        "type": "secret",
+        "optional": false
+      },
+      "timeout": {
+        "type": "duration",
+        "optional": true
+      },
+      "retry_max": {
+        "type": "number",
+        "min": 0,
+        "max": 4294967295,
+        "optional": true
+      },
+      "retry_backoff": {
+        "type": "duration",
+        "optional": true
+      },
+      "queue_max": {
+        "type": "number",
+        "min": 0,
+        "max": 9007199254740991,
+        "optional": true
+      }
+    }
+  },
+  "ClientEntry": {
+    "type": "object",
+    "fields": {
+      "enabled": {
+        "type": "boolean",
+        "optional": true
+      },
+      "user": {
+        "type": "string",
+        "nullable": true,
+        "optional": true
+      },
+      "vkey": {
+        "type": "secret",
+        "optional": false
+      },
+      "remark": {
+        "type": "string",
+        "optional": true
+      },
+      "quota": {
+        "ref": "Quota",
+        "optional": true
+      },
+      "rate_limit": {
+        "type": "number",
+        "min": 0,
+        "max": 9007199254740991,
+        "nullable": true,
+        "optional": true
+      },
+      "max_connections": {
+        "type": "number",
+        "min": 0,
+        "max": 9007199254740991,
+        "nullable": true,
+        "optional": true
+      },
+      "max_tunnels": {
+        "type": "number",
+        "min": 0,
+        "max": 9007199254740991,
+        "nullable": true,
+        "optional": true
+      },
+      "acl_mode": {
+        "ref": "AclMode",
+        "optional": true
+      },
+      "acl_rules": {
+        "type": "string",
+        "optional": true
+      },
+      "allow_config_push": {
+        "type": "boolean",
+        "optional": true
+      }
+    }
+  },
+  "ConnectMode": {
+    "type": "enum",
+    "options": [
+      "direct",
+      "reverse",
+      "dual"
+    ]
+  },
+  "EventContent": {
+    "type": "object",
+    "fields": {
+      "body_template": {
+        "type": "json",
+        "optional": true
+      },
+      "header_templates": {
+        "type": "map",
+        "item": {
+          "type": "string"
+        },
+        "optional": false
+      }
+    }
+  },
+  "EventSelector": {
+    "type": "object",
+    "fields": {
+      "event_names": {
+        "type": "array",
+        "item": {
+          "type": "string"
+        },
+        "optional": false
+      },
+      "resources": {
+        "type": "array",
+        "item": {
+          "type": "string"
+        },
+        "optional": false
+      },
+      "actions": {
+        "type": "array",
+        "item": {
+          "type": "string"
+        },
+        "optional": false
+      },
+      "users": {
+        "type": "array",
+        "item": {
+          "type": "string"
+        },
+        "optional": false
+      },
+      "clients": {
+        "type": "array",
+        "item": {
+          "type": "string"
+        },
+        "optional": false
+      },
+      "tunnels": {
+        "type": "array",
+        "item": {
+          "type": "number",
+          "min": 0,
+          "max": 4294967295
+        },
+        "optional": false
+      },
+      "hosts": {
+        "type": "array",
+        "item": {
+          "type": "string"
+        },
+        "optional": false
+      }
+    }
+  },
+  "ExternalAccountBinding": {
+    "type": "object",
+    "fields": {
+      "key_id": {
+        "type": "string",
+        "optional": false
+      },
+      "hmac_key": {
+        "type": "secret",
+        "optional": false
+      }
+    }
+  },
+  "FileConfig": {
+    "type": "object",
+    "fields": {
+      "root": {
+        "type": "string",
+        "optional": false
+      },
+      "prefix": {
+        "type": "string",
+        "optional": true
+      },
+      "read_only": {
+        "type": "boolean",
+        "optional": true
+      },
+      "auto_index": {
+        "type": "boolean",
+        "optional": true
+      },
+      "auth": {
+        "ref": "Authentication",
+        "optional": true
+      }
+    }
+  },
+  "GeoFiles": {
+    "type": "object",
+    "fields": {
+      "geoip": {
+        "type": "string",
+        "nullable": true,
+        "optional": true
+      },
+      "geosite": {
+        "type": "string",
+        "nullable": true,
+        "optional": true
+      },
+      "extra": {
+        "type": "map",
+        "item": {
+          "type": "string"
+        },
+        "optional": true
+      }
+    }
+  },
+  "HealthCheck": {
+    "type": "object",
+    "fields": {
+      "type": {
+        "ref": "HealthCheckKind",
+        "optional": true
+      },
+      "interval": {
+        "type": "duration",
+        "optional": true
+      },
+      "timeout": {
+        "type": "duration",
+        "optional": true
+      },
+      "failures_to_evict": {
+        "type": "number",
+        "min": 0,
+        "max": 4294967295,
+        "optional": true
+      },
+      "successes_to_restore": {
+        "type": "number",
+        "min": 0,
+        "max": 4294967295,
+        "optional": true
+      },
+      "path": {
+        "type": "string",
+        "optional": true
+      },
+      "expect_status": {
+        "type": "array",
+        "item": {
+          "type": "number",
+          "min": 0,
+          "max": 65535
+        },
+        "optional": true
+      }
+    }
+  },
+  "HealthCheckKind": {
+    "type": "enum",
+    "options": [
+      "none",
+      "tcp",
+      "http"
+    ]
+  },
+  "HttpProxyConfig": {
+    "type": "object",
+    "fields": {
+      "host_limit": {
+        "type": "map",
+        "item": {
+          "ref": "ResourceLimits"
+        },
+        "optional": true
+      },
+      "http3_bind": {
+        "type": "string",
+        "nullable": true,
+        "optional": true
+      },
+      "proxy_accept": {
+        "ref": "ProxyAccept",
+        "optional": true
+      },
+      "cert_reload_interval": {
+        "type": "duration",
+        "optional": true
+      },
+      "bind": {
+        "type": "string",
+        "nullable": true,
+        "optional": true
+      },
+      "tls_bind": {
+        "type": "string",
+        "nullable": true,
+        "optional": true
+      },
+      "default_tls": {
+        "ref": "TlsConfig",
+        "nullable": true,
+        "optional": true
+      },
+      "certificates": {
+        "type": "map",
+        "item": {
+          "ref": "TlsConfig"
+        },
+        "optional": true
+      },
+      "acme": {
+        "ref": "AcmeConfig",
+        "nullable": true,
+        "optional": true
+      },
+      "forwarded_headers": {
+        "type": "boolean",
+        "optional": true
+      },
+      "response_timeout": {
+        "type": "duration",
+        "optional": true
+      }
+    }
+  },
+  "HttpRouteOptions": {
+    "type": "object",
+    "fields": {
+      "tls_mode": {
+        "ref": "TlsMode",
+        "optional": true
+      },
+      "backend_http2": {
+        "type": "boolean",
+        "optional": true
+      },
+      "path": {
+        "type": "string",
+        "optional": true
+      },
+      "scheme": {
+        "ref": "HttpScheme",
+        "optional": true
+      },
+      "rewrite_prefix": {
+        "type": "string",
+        "nullable": true,
+        "optional": true
+      },
+      "host": {
+        "type": "string",
+        "nullable": true,
+        "optional": true
+      },
+      "request_headers": {
+        "type": "map",
+        "item": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "response_headers": {
+        "type": "map",
+        "item": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "redirect": {
+        "type": "string",
+        "nullable": true,
+        "optional": true
+      },
+      "force_https": {
+        "type": "boolean",
+        "optional": true
+      },
+      "cors": {
+        "type": "boolean",
+        "optional": true
+      },
+      "error_pages": {
+        "type": "map",
+        "item": {
+          "type": "string"
+        },
+        "optional": true
+      }
+    }
+  },
+  "HttpScheme": {
+    "type": "enum",
+    "options": [
+      "any",
+      "http",
+      "https"
+    ]
+  },
+  "KcpConfig": {
+    "type": "object",
+    "fields": {
+      "data_shards": {
+        "type": "number",
+        "min": 0,
+        "max": 255,
+        "optional": false
+      },
+      "parity_shards": {
+        "type": "number",
+        "min": 0,
+        "max": 255,
+        "optional": false
+      },
+      "mtu": {
+        "type": "number",
+        "min": 0,
+        "max": 65535,
+        "optional": false
+      },
+      "send_window": {
+        "type": "number",
+        "min": 0,
+        "max": 65535,
+        "optional": false
+      },
+      "receive_window": {
+        "type": "number",
+        "min": 0,
+        "max": 65535,
+        "optional": false
+      },
+      "interval_ms": {
+        "type": "number",
+        "min": 0,
+        "max": 65535,
+        "optional": false
+      },
+      "fast_resend": {
+        "type": "number",
+        "min": 0,
+        "max": 255,
+        "optional": false
+      },
+      "nodelay": {
+        "type": "boolean",
+        "optional": false
+      },
+      "congestion_control": {
+        "type": "boolean",
+        "optional": false
+      },
+      "session_timeout": {
+        "type": "duration",
+        "optional": false
+      },
+      "max_sessions": {
+        "type": "number",
+        "min": 0,
+        "max": 9007199254740991,
+        "optional": false
+      }
+    }
+  },
+  "LoadBalance": {
+    "type": "enum",
+    "options": [
+      "round_robin",
+      "weighted",
+      "least_connections",
+      "source_hash",
+      "failover"
+    ]
+  },
+  "LocalConfig": {
+    "type": "object",
+    "fields": {
+      "user": {
+        "type": "string",
+        "nullable": true,
+        "optional": true
+      },
+      "acl_mode": {
+        "ref": "AclMode",
+        "optional": true
+      },
+      "acl_rules": {
+        "type": "string",
+        "optional": true
+      },
+      "limits": {
+        "ref": "ResourceLimits",
+        "optional": true
+      },
+      "network": {
+        "ref": "NetworkConfig",
+        "optional": true
+      },
+      "dial_timeout": {
+        "type": "duration",
+        "optional": true
+      },
+      "mapping": {
+        "type": "array",
+        "item": {
+          "ref": "PortMapping"
+        },
+        "optional": true
+      },
+      "tunnel": {
+        "type": "array",
+        "item": {
+          "ref": "TunnelConfig"
+        },
+        "optional": true
+      }
+    }
+  },
+  "LogConfig": {
+    "type": "object",
+    "fields": {
+      "rotation": {
+        "ref": "LogRotation",
+        "nullable": true,
+        "optional": true
+      },
+      "level": {
+        "type": "string",
+        "optional": true
+      },
+      "file": {
+        "type": "string",
+        "nullable": true,
+        "optional": true
+      },
+      "json": {
+        "type": "boolean",
+        "optional": true
+      }
+    }
+  },
+  "LogRotation": {
+    "type": "object",
+    "fields": {
+      "max_bytes": {
+        "type": "number",
+        "min": 0,
+        "max": 9007199254740991,
+        "optional": true
+      },
+      "max_files": {
+        "type": "number",
+        "min": 0,
+        "max": 9007199254740991,
+        "optional": true
+      },
+      "interval": {
+        "type": "duration",
+        "nullable": true,
+        "optional": true
+      }
+    }
+  },
+  "ManagedConfig": {
+    "type": "object",
+    "fields": {
+      "tunnel": {
+        "type": "array",
+        "item": {
+          "ref": "TunnelConfig"
+        },
+        "optional": true
+      },
+      "mapping": {
+        "type": "array",
+        "item": {
+          "ref": "PortMapping"
+        },
+        "optional": true
+      },
+      "target_policy": {
+        "ref": "TargetPolicy",
+        "nullable": true,
+        "optional": true
+      }
+    }
+  },
+  "MuxConfig": {
+    "type": "object",
+    "fields": {
+      "initial_stream_window": {
+        "type": "number",
+        "min": 0,
+        "max": 4294967295,
+        "optional": false
+      },
+      "max_stream_window": {
+        "type": "number",
+        "min": 0,
+        "max": 4294967295,
+        "optional": false
+      },
+      "max_session_window": {
+        "type": "number",
+        "min": 0,
+        "max": 9007199254740991,
+        "optional": false
+      },
+      "max_send_queue": {
+        "type": "number",
+        "min": 0,
+        "max": 9007199254740991,
+        "optional": false
+      },
+      "max_control_queue": {
+        "type": "number",
+        "min": 0,
+        "max": 9007199254740991,
+        "optional": false
+      },
+      "max_streams": {
+        "type": "number",
+        "min": 0,
+        "max": 9007199254740991,
+        "optional": false
+      },
+      "accept_backlog": {
+        "type": "number",
+        "min": 0,
+        "max": 9007199254740991,
+        "optional": false
+      },
+      "open_timeout": {
+        "type": "duration",
+        "optional": false
+      }
+    }
+  },
+  "NetworkConfig": {
+    "type": "object",
+    "fields": {
+      "local_ip": {
+        "type": "string",
+        "nullable": true,
+        "optional": true
+      },
+      "forward_local_ip": {
+        "type": "boolean",
+        "optional": true
+      },
+      "dns": {
+        "type": "array",
+        "item": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "proxy": {
+        "ref": "UpstreamProxy",
+        "nullable": true,
+        "optional": true
+      }
+    }
+  },
+  "NodeConfig": {
+    "type": "object",
+    "fields": {
+      "id": {
+        "type": "string",
+        "optional": false
+      },
+      "state_path": {
+        "type": "string",
+        "optional": false
+      },
+      "changes_window": {
+        "type": "number",
+        "min": 0,
+        "max": 9007199254740991,
+        "optional": true
+      },
+      "platform": {
+        "type": "map",
+        "item": {
+          "ref": "PlatformConfig"
+        },
+        "optional": true
+      },
+      "webhook": {
+        "type": "map",
+        "item": {
+          "ref": "WebhookConfig"
+        },
+        "optional": true
+      },
+      "usage_interval": {
+        "type": "duration",
+        "nullable": true,
+        "optional": true
+      },
+      "traffic_report_interval": {
+        "type": "duration",
+        "nullable": true,
+        "optional": true
+      },
+      "traffic_report_step_bytes": {
+        "type": "number",
+        "min": 0,
+        "max": 9007199254740991,
+        "optional": true
+      }
+    }
+  },
+  "NtpConfig": {
+    "type": "object",
+    "fields": {
+      "server": {
+        "type": "string",
+        "optional": false
+      },
+      "interval": {
+        "type": "duration",
+        "optional": true
+      },
+      "timeout": {
+        "type": "duration",
+        "optional": true
+      },
+      "max_offset": {
+        "type": "duration",
+        "optional": true
+      }
+    }
+  },
+  "P2pAgentConfig": {
+    "type": "object",
+    "fields": {
+      "enabled": {
+        "type": "boolean",
+        "optional": false
+      },
+      "bind_ip": {
+        "type": "string",
+        "optional": true
+      },
+      "max_sessions": {
+        "type": "number",
+        "min": 0,
+        "max": 9007199254740991,
+        "optional": false
+      }
+    }
+  },
+  "P2pServerConfig": {
+    "type": "object",
+    "fields": {
+      "bind": {
+        "type": "string",
+        "optional": false
+      },
+      "advertise": {
+        "type": "string",
+        "optional": false
+      },
+      "timeout": {
+        "type": "duration",
+        "optional": true
+      },
+      "max_pending": {
+        "type": "number",
+        "min": 0,
+        "max": 9007199254740991,
+        "optional": true
+      }
+    }
+  },
+  "PayloadOptions": {
+    "type": "object",
+    "fields": {
+      "compress": {
+        "type": "boolean",
+        "optional": true
+      },
+      "encrypt": {
+        "type": "boolean",
+        "optional": true
+      }
+    }
+  },
+  "PlatformConfig": {
+    "type": "object",
+    "fields": {
+      "enabled": {
+        "type": "boolean",
+        "optional": true
+      },
+      "token": {
+        "type": "secret",
+        "optional": false
+      },
+      "scope": {
+        "ref": "PlatformScope",
+        "optional": true
+      },
+      "user": {
+        "type": "string",
+        "nullable": true,
+        "optional": true
+      },
+      "mode": {
+        "ref": "ConnectMode",
+        "optional": true
+      },
+      "reverse_url": {
+        "type": "string",
+        "nullable": true,
+        "optional": true
+      },
+      "trust": {
+        "ref": "TrustPolicy",
+        "optional": true
+      },
+      "heartbeat": {
+        "type": "duration",
+        "optional": true
+      },
+      "callback": {
+        "ref": "CallbackConfig",
+        "nullable": true,
+        "optional": true
+      }
+    }
+  },
+  "PlatformScope": {
+    "type": "enum",
+    "options": [
+      "full",
+      "account"
+    ]
+  },
+  "PortMapping": {
+    "type": "object",
+    "fields": {
+      "mode": {
+        "ref": "TunnelMode",
+        "optional": false
+      },
+      "server_ports": {
+        "type": "string",
+        "optional": false
+      },
+      "target_ports": {
+        "type": "string",
+        "optional": false
+      },
+      "target_host": {
+        "type": "string",
+        "optional": true
+      },
+      "bind": {
+        "type": "string",
+        "nullable": true,
+        "optional": true
+      },
+      "tls": {
+        "type": "boolean",
+        "optional": true
+      },
+      "trust": {
+        "ref": "TrustPolicy",
+        "optional": true
+      },
+      "acl_mode": {
+        "ref": "AclMode",
+        "optional": true
+      },
+      "acl_rules": {
+        "type": "string",
+        "optional": true
+      },
+      "options": {
+        "ref": "RouteOptions",
+        "optional": true
+      },
+      "target_policy": {
+        "ref": "TargetPolicy",
+        "optional": true
+      },
+      "health": {
+        "ref": "HealthCheck",
+        "nullable": true,
+        "optional": true
+      },
+      "remark": {
+        "type": "string",
+        "optional": true
+      }
+    }
+  },
+  "PortRange": {
+    "type": "portRange"
+  },
+  "ProxyAccept": {
+    "type": "object",
+    "fields": {
+      "mode": {
+        "ref": "ProxyMode",
+        "optional": true
+      },
+      "trusted": {
+        "type": "array",
+        "item": {
+          "type": "string"
+        },
+        "optional": true
+      }
+    }
+  },
+  "ProxyCredentials": {
+    "type": "object",
+    "fields": {
+      "username": {
+        "type": "string",
+        "optional": false
+      },
+      "password": {
+        "type": "secret",
+        "optional": false
+      }
+    }
+  },
+  "ProxyKind": {
+    "type": "enum",
+    "options": [
+      "http",
+      "socks5"
+    ]
+  },
+  "ProxyMode": {
+    "type": "enum",
+    "options": [
+      "off",
+      "optional",
+      "required"
+    ]
+  },
+  "ProxyVersion": {
+    "type": "enum",
+    "options": [
+      "off",
+      "v1",
+      "v2"
+    ]
+  },
+  "Quota": {
+    "type": "object",
+    "fields": {
+      "flow_limit": {
+        "type": "number",
+        "min": 0,
+        "max": 9007199254740991,
+        "nullable": true,
+        "optional": true
+      },
+      "expires_at": {
+        "type": "number",
+        "min": -9007199254740991,
+        "max": 9007199254740991,
+        "nullable": true,
+        "optional": true
+      }
+    }
+  },
+  "RemoteFileRoot": {
+    "type": "object",
+    "fields": {
+      "path": {
+        "type": "string",
+        "optional": false
+      },
+      "read_only": {
+        "type": "boolean",
+        "optional": true
+      }
+    }
+  },
+  "RemotePolicy": {
+    "type": "object",
+    "fields": {
+      "enabled": {
+        "type": "boolean",
+        "optional": true
+      },
+      "target_policy": {
+        "ref": "TargetPolicy",
+        "optional": true
+      },
+      "console_scope": {
+        "type": "boolean",
+        "optional": true
+      },
+      "file_root": {
+        "type": "map",
+        "item": {
+          "ref": "RemoteFileRoot"
+        },
+        "optional": true
+      }
+    }
+  },
+  "ResourceLimits": {
+    "type": "object",
+    "fields": {
+      "quota": {
+        "ref": "Quota",
+        "optional": true
+      },
+      "rate_limit": {
+        "type": "number",
+        "min": 0,
+        "max": 9007199254740991,
+        "nullable": true,
+        "optional": true
+      },
+      "max_connections": {
+        "type": "number",
+        "min": 0,
+        "max": 9007199254740991,
+        "nullable": true,
+        "optional": true
+      }
+    }
+  },
+  "RouteOptions": {
+    "type": "object",
+    "fields": {
+      "transparent_tproxy": {
+        "type": "boolean",
+        "optional": true
+      },
+      "payload": {
+        "ref": "PayloadOptions",
+        "optional": true
+      },
+      "limits": {
+        "ref": "ResourceLimits",
+        "optional": true
+      },
+      "proxy_protocol": {
+        "ref": "ProxyVersion",
+        "optional": true
+      },
+      "proxy_accept": {
+        "ref": "ProxyAccept",
+        "optional": true
+      },
+      "auth": {
+        "ref": "Authentication",
+        "optional": true
+      },
+      "http": {
+        "ref": "HttpRouteOptions",
+        "optional": true
+      }
+    }
+  },
+  "ServerConfig": {
+    "type": "object",
+    "fields": {
+      "node": {
+        "ref": "NodeConfig",
+        "nullable": true,
+        "optional": true
+      },
+      "p2p": {
+        "ref": "P2pServerConfig",
+        "nullable": true,
+        "optional": true
+      },
+      "share": {
+        "type": "map",
+        "item": {
+          "ref": "ShareConfig"
+        },
+        "optional": true
+      },
+      "admin": {
+        "ref": "AdminConfig",
+        "nullable": true,
+        "optional": true
+      },
+      "managed": {
+        "type": "map",
+        "item": {
+          "ref": "ManagedConfig"
+        },
+        "optional": true
+      },
+      "local": {
+        "type": "map",
+        "item": {
+          "ref": "LocalConfig"
+        },
+        "optional": true
+      },
+      "ntp": {
+        "ref": "NtpConfig",
+        "nullable": true,
+        "optional": true
+      },
+      "state": {
+        "ref": "StateConfig",
+        "nullable": true,
+        "optional": true
+      },
+      "geo": {
+        "ref": "GeoFiles",
+        "optional": true
+      },
+      "acl_mode": {
+        "ref": "AclMode",
+        "optional": true
+      },
+      "acl_rules": {
+        "type": "string",
+        "optional": true
+      },
+      "user": {
+        "type": "map",
+        "item": {
+          "ref": "UserEntry"
+        },
+        "optional": true
+      },
+      "bridge": {
+        "ref": "BridgeConfig",
+        "optional": true
+      },
+      "http": {
+        "ref": "HttpProxyConfig",
+        "nullable": true,
+        "optional": true
+      },
+      "log": {
+        "ref": "LogConfig",
+        "optional": true
+      },
+      "client": {
+        "type": "map",
+        "item": {
+          "ref": "ClientEntry"
+        },
+        "optional": true
+      },
+      "allowed_ports": {
+        "type": "array",
+        "item": {
+          "ref": "PortRange"
+        },
+        "optional": true
+      }
+    }
+  },
+  "ShareConfig": {
+    "type": "object",
+    "fields": {
+      "direct": {
+        "type": "boolean",
+        "optional": true
+      },
+      "client": {
+        "type": "string",
+        "optional": false
+      },
+      "tunnel": {
+        "type": "number",
+        "min": 0,
+        "max": 4294967295,
+        "optional": false
+      },
+      "secret": {
+        "type": "secret",
+        "optional": false
+      },
+      "dynamic": {
+        "type": "boolean",
+        "optional": true
+      },
+      "allow_clients": {
+        "type": "array",
+        "item": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "acl_mode": {
+        "ref": "AclMode",
+        "optional": true
+      },
+      "acl_rules": {
+        "type": "string",
+        "optional": true
+      }
+    }
+  },
+  "StateConfig": {
+    "type": "object",
+    "fields": {
+      "path": {
+        "type": "string",
+        "optional": false
+      },
+      "save_interval": {
+        "type": "duration",
+        "optional": true
+      }
+    }
+  },
+  "TargetPolicy": {
+    "type": "object",
+    "fields": {
+      "allow": {
+        "type": "array",
+        "item": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "deny": {
+        "type": "array",
+        "item": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "ports": {
+        "type": "array",
+        "item": {
+          "type": "number",
+          "min": 0,
+          "max": 65535
+        },
+        "optional": true
+      }
+    }
+  },
+  "TlsConfig": {
+    "type": "object",
+    "fields": {
+      "cert": {
+        "type": "string",
+        "optional": false
+      },
+      "key": {
+        "type": "string",
+        "optional": false
+      }
+    }
+  },
+  "TlsMode": {
+    "type": "enum",
+    "options": [
+      "http",
+      "passthrough",
+      "offload"
+    ]
+  },
+  "TransportKind": {
+    "type": "enum",
+    "options": [
+      "tcp",
+      "tls",
+      "ws",
+      "wss",
+      "quic",
+      "kcp"
+    ]
+  },
+  "TrustPolicy": {
+    "type": "trust"
+  },
+  "TunnelConfig": {
+    "type": "object",
+    "fields": {
+      "public": {
+        "type": "boolean",
+        "optional": true
+      },
+      "enabled": {
+        "type": "boolean",
+        "optional": true
+      },
+      "id": {
+        "type": "number",
+        "min": 0,
+        "max": 4294967295,
+        "nullable": true,
+        "optional": true
+      },
+      "file": {
+        "ref": "FileConfig",
+        "nullable": true,
+        "optional": true
+      },
+      "mode": {
+        "ref": "TunnelMode",
+        "optional": false
+      },
+      "port": {
+        "type": "number",
+        "min": 0,
+        "max": 65535,
+        "optional": true
+      },
+      "bind": {
+        "type": "string",
+        "nullable": true,
+        "optional": true
+      },
+      "backend": {
+        "type": "array",
+        "item": {
+          "ref": "Backend"
+        },
+        "optional": true
+      },
+      "balance": {
+        "ref": "LoadBalance",
+        "optional": true
+      },
+      "health": {
+        "ref": "HealthCheck",
+        "nullable": true,
+        "optional": true
+      },
+      "hosts": {
+        "type": "array",
+        "item": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "acl_mode": {
+        "ref": "AclMode",
+        "optional": true
+      },
+      "acl_rules": {
+        "type": "string",
+        "optional": true
+      },
+      "remark": {
+        "type": "string",
+        "optional": true
+      },
+      "options": {
+        "ref": "RouteOptions",
+        "optional": true
+      },
+      "target_policy": {
+        "ref": "TargetPolicy",
+        "optional": true
+      }
+    }
+  },
+  "TunnelMode": {
+    "type": "enum",
+    "options": [
+      "file",
+      "tcp",
+      "udp",
+      "http",
+      "socks5",
+      "httpproxy",
+      "mixedproxy",
+      "transparent"
+    ]
+  },
+  "UpstreamProxy": {
+    "type": "object",
+    "fields": {
+      "kind": {
+        "ref": "ProxyKind",
+        "optional": false
+      },
+      "server": {
+        "type": "string",
+        "optional": false
+      },
+      "auth": {
+        "ref": "ProxyCredentials",
+        "nullable": true,
+        "optional": true
+      },
+      "remote_dns": {
+        "type": "boolean",
+        "optional": true
+      }
+    }
+  },
+  "UserEntry": {
+    "type": "object",
+    "fields": {
+      "limits": {
+        "ref": "ResourceLimits",
+        "optional": true
+      },
+      "acl_mode": {
+        "ref": "AclMode",
+        "optional": true
+      },
+      "acl_rules": {
+        "type": "string",
+        "optional": true
+      }
+    }
+  },
+  "VisitorConfig": {
+    "type": "object",
+    "fields": {
+      "connection": {
+        "ref": "VisitorConnection",
+        "optional": true
+      },
+      "name": {
+        "type": "string",
+        "optional": false
+      },
+      "share": {
+        "type": "string",
+        "optional": false
+      },
+      "secret": {
+        "type": "secret",
+        "optional": false
+      },
+      "bind": {
+        "type": "string",
+        "optional": false
+      },
+      "target": {
+        "type": "string",
+        "nullable": true,
+        "optional": true
+      },
+      "mode": {
+        "ref": "VisitorMode",
+        "optional": true
+      },
+      "auth": {
+        "ref": "Authentication",
+        "optional": true
+      },
+      "max_connections": {
+        "type": "number",
+        "min": 0,
+        "max": 9007199254740991,
+        "optional": true
+      },
+      "udp_idle": {
+        "type": "duration",
+        "optional": true
+      },
+      "acl_mode": {
+        "ref": "AclMode",
+        "optional": true
+      },
+      "acl_rules": {
+        "type": "string",
+        "optional": true
+      }
+    }
+  },
+  "VisitorConnection": {
+    "type": "enum",
+    "options": [
+      "relay",
+      "prefer_direct",
+      "direct"
+    ]
+  },
+  "VisitorMode": {
+    "type": "enum",
+    "options": [
+      "tcp",
+      "udp",
+      "socks5"
+    ]
+  },
+  "WebhookConfig": {
+    "type": "object",
+    "fields": {
+      "user": {
+        "type": "string",
+        "nullable": true,
+        "optional": true
+      },
+      "delivery": {
+        "ref": "CallbackConfig",
+        "optional": false
+      }
+    }
+  }
+}

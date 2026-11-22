@@ -1,0 +1,23 @@
+[bridge]
+bind = "0.0.0.0:14028"
+tls = { cert = "conf/bridge.pem", key = "conf/bridge.key" }
+
+[http]
+bind = ""
+tls_bind = "0.0.0.0:8443"
+
+[http.acme]
+# Public TCP 443 must reach this TLS listener.
+challenge = "tls-alpn-01"
+email = "owner@example.com"
+directory = "https://acme.zerossl.com/v2/DV90"
+zerossl_api_key = "replace-with-your-zerossl-account-api-key"
+staging = false
+# Example only: read the CA terms before enabling issuance.
+accept_tos = true
+cache_dir = "conf/zerossl"
+domains = ["app.example.com"]
+
+[client.agent-1]
+vkey = "replace-with-a-long-random-key"
+allow_config_push = true

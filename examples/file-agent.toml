@@ -1,0 +1,31 @@
+# This example shares only the repository's example configurations, read-only.
+server = "127.0.0.1:14028"
+key_id = "files"
+vkey = "replace-with-a-long-random-secret"
+transport = "tcp" # Loopback demonstration; use TLS/WSS/QUIC for remote agents.
+
+[[tunnel]]
+id = 100
+mode = "file"
+port = 9001
+bind = "127.0.0.1"
+[tunnel.file]
+root = "examples"
+prefix = "/files"
+read_only = true
+auto_index = true
+[tunnel.file.auth.users]
+reader = "replace-this-password"
+
+[[tunnel]]
+id = 200
+mode = "file"
+port = 8081
+hosts = ["files.example.test"]
+[tunnel.file]
+root = "examples"
+read_only = true
+[tunnel.file.auth.users]
+reader = "replace-this-password"
+[tunnel.options.http]
+backend_http2 = true

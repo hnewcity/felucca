@@ -1,0 +1,29 @@
+server = "127.0.0.1:14028"
+key_id = "office"
+vkey = "replace-office-node-key"
+transport = "tls"
+
+[trust]
+mode = "pinned"
+# Replace with the server's SHA-256 certificate fingerprint.
+fingerprint = "0000000000000000000000000000000000000000000000000000000000000000"
+
+[[tunnel]]
+id = 1
+mode = "tcp"
+public = false
+backend = [{ addr = "127.0.0.1:3000" }]
+
+[[tunnel]]
+id = 2
+mode = "udp"
+public = false
+backend = [{ addr = "127.0.0.1:5353" }]
+
+[[tunnel]]
+id = 3
+mode = "socks5"
+public = false
+# Restrict dynamic destinations on the provider, even with trusted visitors.
+[tunnel.target_policy]
+allow = ["127.0.0.0/8", "::1", "10.0.0.0/8"]

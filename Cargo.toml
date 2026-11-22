@@ -1,0 +1,88 @@
+[workspace]
+members = ["crates/*"]
+exclude = ["vendor/h3", "vendor/h3-quinn"]
+resolver = "3"
+
+[patch.crates-io]
+# h3 0.0.8 rejects :protocol=websocket; retain upstream with one RFC 9220 extension.
+h3 = { path = "vendor/h3" }
+h3-quinn = { path = "vendor/h3-quinn" }
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.88"
+license = "Apache-2.0"
+repository = "https://github.com/hnewcity/felucca"
+
+[workspace.dependencies]
+felucca-core = { path = "crates/felucca-core" }
+felucca-i18n = { path = "crates/felucca-i18n" }
+felucca-proto = { path = "crates/felucca-proto" }
+felucca-mux = { path = "crates/felucca-mux" }
+felucca-transport = { path = "crates/felucca-transport" }
+felucca-server = { path = "crates/felucca-server" }
+felucca-client = { path = "crates/felucca-client" }
+felucca-service = { path = "crates/felucca-service" }
+
+tokio = "1.53.1"
+tokio-util = "0.7.19"
+bytes = "1.12.1"
+futures-util = { version = "0.3.34", default-features = false, features = ["std"] }
+pin-project-lite = "0.2.17"
+
+tracing = "0.1.44"
+tracing-subscriber = { version = "0.3.23", features = ["env-filter", "fmt", "json"] }
+
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.151"
+toml = "1.1.6"
+postcard = { version = "1.1.3", default-features = false, features = ["alloc"] }
+humantime-serde = "1.1.1"
+
+thiserror = "2.0.20"
+anyhow = "1.0.104"
+clap = { version = "4.6.7", features = ["derive", "env"] }
+
+rustls = { version = "0.23.45", default-features = false, features = ["std", "ring", "tls12"] }
+tokio-rustls = { version = "0.26.5", default-features = false, features = ["ring", "tls12"] }
+rustls-pemfile = "2.2.0"
+webpki-roots = "1.0.9"
+rcgen = "0.14.10"
+
+hyper = { version = "1.11.1", features = ["http1", "http2", "server", "client"] }
+hyper-util = { version = "0.1.20", features = ["tokio", "server-auto", "client-legacy", "http1", "http2"] }
+http = "1.5.0"
+http-body-util = "0.1.5"
+httparse = "1.10.1"
+h3 = "0.0.8"
+h3-quinn = "0.0.10"
+
+quinn = "0.11.12"
+sha2 = { version = "0.11.0", default-features = false }
+hmac = { version = "0.13.0", default-features = false }
+subtle = { version = "2.6.1", default-features = false }
+rand = "0.10.2"
+tokio-tungstenite = "0.30.0"
+snap = "1.1.2"
+
+dashmap = "6.2.1"
+parking_lot = "0.12.5"
+arc-swap = "1.9.2"
+ipnet = "2.12.2"
+socket2 = { version = "0.6.5", features = ["all"] }
+uuid = { version = "1.26.1", features = ["v4", "serde"] }
+
+[workspace.lints.rust]
+unsafe_code = "deny"
+unused_must_use = "deny"
+
+[workspace.lints.clippy]
+dbg_macro = "deny"
+todo = "warn"
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
+# Retain function symbols for the opt-in CPU profiler.
+strip = "debuginfo"

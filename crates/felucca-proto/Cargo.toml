@@ -1,0 +1,27 @@
+[package]
+name = "felucca-proto"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "felucca control-plane messages, handshake and frame codec"
+
+[lints]
+workspace = true
+
+[dependencies]
+felucca-core.workspace = true
+serde.workspace = true
+postcard.workspace = true
+bytes.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+tokio = { workspace = true, features = ["io-util", "time"] }
+sha2.workspace = true
+hmac.workspace = true
+subtle.workspace = true
+rand.workspace = true
+
+[dev-dependencies]
+# `full` deliberately excludes test-util; the timeout tests need a paused clock.
+tokio = { workspace = true, features = ["full", "test-util"] }

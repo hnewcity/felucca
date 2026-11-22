@@ -1,0 +1,45 @@
+[package]
+name = "felucca-transport"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "Pluggable tunnel transports (tcp, tls, ws/wss, quic) with a unified listener/connector abstraction"
+
+[lints]
+workspace = true
+
+[dependencies]
+felucca-core.workspace = true
+felucca-mux.workspace = true
+bytes.workspace = true
+futures-util.workspace = true
+pin-project-lite.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+tokio = { workspace = true, features = ["io-util", "macros", "net", "rt", "sync", "time"] }
+tokio-util.workspace = true
+rustls.workspace = true
+tokio-rustls.workspace = true
+rustls-pemfile.workspace = true
+webpki-roots.workspace = true
+sha2.workspace = true
+rcgen.workspace = true
+quinn.workspace = true
+tokio-tungstenite.workspace = true
+snap.workspace = true
+socket2.workspace = true
+base64 = "0.22.1"
+httparse.workspace = true
+hickory-resolver = { version = "0.26.3", default-features = false, features = ["tokio"] }
+rand.workspace = true
+ring = "0.17.14"
+kcp = "0.6.0"
+reed-solomon-erasure = { version = "6.0.0", default-features = false }
+
+[dev-dependencies]
+# `full` deliberately excludes test-util; the timeout tests need a paused clock.
+tokio = { workspace = true, features = ["full", "test-util"] }
+
+[target.'cfg(any(target_os = "macos", target_os = "freebsd"))'.dependencies]
+libc = "0.2.189"

@@ -1,0 +1,17 @@
+[bridge]
+bind = "0.0.0.0:14028"
+kcp_bind = "0.0.0.0:8025"
+
+[bridge.kcp]
+data_shards = 10
+parity_shards = 3
+mtu = 1200
+send_window = 256
+receive_window = 256
+interval_ms = 20
+session_timeout = "90s"
+max_sessions = 128
+
+[client.agent-1]
+vkey = "replace-with-your-bridge-key"
+allow_config_push = true

@@ -1,0 +1,29 @@
+server = "127.0.0.1:14028"
+key_id = "policy"
+vkey = "replace-with-a-long-random-secret"
+transport = "tcp" # Loopback example; configure TLS and a pinned certificate remotely.
+
+[[tunnel]]
+id = 100 # Keep this id when reordering/editing persisted tunnels.
+mode = "tcp"
+port = 9000
+bind = "127.0.0.1"
+backend = [{addr = "127.0.0.1:3000"}]
+acl_mode = "allow"
+acl_rules = "geoip:private"
+[tunnel.options.limits]
+max_connections = 10
+quota = { flow_limit = 1073741824 }
+[tunnel.target_policy]
+allow = ["geoip:private"]
+ports = [3000]
+
+[[tunnel]]
+id = 200
+mode = "http"
+port = 8080
+hosts = ["app.example.test"]
+backend = [{addr = "localhost:3000"}]
+[tunnel.target_policy]
+allow = ["domain:localhost"]
+ports = [3000]

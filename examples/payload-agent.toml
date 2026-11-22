@@ -1,0 +1,19 @@
+server = "bridge.example.com:14028"
+key_id = "agent-1"
+vkey = "replace-with-your-bridge-key"
+transport = "tls"
+
+[[tunnel]]
+mode = "tcp"
+port = 8080
+backend = [{ addr = "127.0.0.1:3000" }]
+[tunnel.options.payload]
+encrypt = true
+
+[[tunnel]]
+mode = "udp"
+port = 9000
+backend = [{ addr = "127.0.0.1:9000" }]
+[tunnel.options.payload]
+compress = true
+encrypt = true

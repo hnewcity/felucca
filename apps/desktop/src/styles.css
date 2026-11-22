@@ -1,0 +1,214 @@
+@font-face {
+  font-family: "Inter Variable";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("@fontsource-variable/inter/files/inter-latin-wght-normal.woff2") format("woff2");
+}
+
+:root {
+  color-scheme: light;
+  --rui-color-dark: #191c1f;
+  --rui-color-background: #ffffff;
+  --rui-color-surface: #f4f4f4;
+  --rui-color-blue: #494fdf;
+  --rui-color-danger: #e23b4a;
+  --rui-color-warning: #ec7e00;
+  --rui-color-teal: #00a87e;
+  --rui-color-secondary: #505a63;
+  --rui-color-muted: #8d969e;
+  --rui-color-border: #e9eaec;
+  --rui-radius-small: 12px;
+  --rui-radius-card: 20px;
+  --rui-radius-pill: 9999px;
+  --rui-space-section: 24px;
+  --rui-space-form: 20px;
+  --rui-font-body:
+    "Inter Variable", Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Microsoft YaHei", sans-serif;
+  --rui-font-display:
+    "Aeonik Pro", "Inter Variable", Inter, "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-family: var(--rui-font-body);
+  color: var(--rui-color-dark);
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.5;
+  letter-spacing: 0.16px;
+}
+
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background: var(--rui-color-background);
+}
+main {
+  display: grid;
+  gap: 16px;
+  padding: 20px;
+}
+h1,
+h2 {
+  font-family: var(--rui-font-display);
+  margin: 0 0 4px;
+}
+h1 {
+  font-size: 22px;
+}
+h2 {
+  font-size: 16px;
+}
+header p,
+.hint {
+  color: var(--rui-color-secondary);
+  margin: 0;
+}
+.surface {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border-radius: var(--rui-radius-card);
+  background: var(--rui-color-surface);
+}
+.offer {
+  border: 2px solid var(--rui-color-blue);
+}
+dl {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 4px 12px;
+  margin: 0;
+}
+dt {
+  color: var(--rui-color-secondary);
+}
+dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-weight: 600;
+}
+label {
+  display: grid;
+  gap: 6px;
+  font-weight: 500;
+}
+input,
+textarea {
+  font: inherit;
+  padding: 10px 12px;
+  border: 1px solid var(--rui-color-border);
+  border-radius: var(--rui-radius-small);
+  background: var(--rui-color-background);
+  color: inherit;
+}
+textarea {
+  resize: vertical;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+}
+input:focus-visible,
+textarea:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--rui-color-blue);
+  outline-offset: 2px;
+}
+button {
+  font: inherit;
+  font-weight: 500;
+  padding: 8px 16px;
+  border: 1px solid var(--rui-color-border);
+  border-radius: var(--rui-radius-pill);
+  background: var(--rui-color-background);
+  color: inherit;
+  cursor: pointer;
+}
+button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+button.primary {
+  background: var(--rui-color-dark);
+  border-color: var(--rui-color-dark);
+  color: #fff;
+}
+button.danger {
+  color: var(--rui-color-danger);
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.connections {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+.connections li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--rui-color-border);
+}
+.connections li:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+.connections .actions {
+  grid-column: 1 / -1;
+}
+.connection {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.badge {
+  align-self: start;
+  padding: 2px 10px;
+  border-radius: var(--rui-radius-pill);
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+}
+/* Text colors meet 4.5:1 against white. */
+.badge.success {
+  background: #007a5c;
+}
+.badge.warning {
+  background: #b35f00;
+}
+.badge.danger {
+  background: #c22737;
+}
+.badge.muted {
+  background: var(--rui-color-secondary);
+}
+.form-error {
+  color: #c22737;
+  margin: 0;
+}
+.form-error:empty {
+  display: none;
+}
+.switch {
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  cursor: pointer;
+}
+.switch input {
+  width: 18px;
+  height: 18px;
+  margin: 2px 0 0;
+  accent-color: var(--rui-color-dark);
+}
+.switch span {
+  display: grid;
+  gap: 2px;
+}

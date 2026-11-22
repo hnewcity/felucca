@@ -1,0 +1,85 @@
+name: Sign and notarize macOS release
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  macos:
+    runs-on: macos-14
+    environment: macos-release
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: 24
+      - run: npm --prefix apps/admin ci
+      - run: npm --prefix apps/admin run build
+      - uses: dtolnay/rust-toolchain@6bed0761d98439e5a578e2877258200ad565ba87
+        with:
+          toolchain: 1.98.1
+      - run: sh scripts/cargo-external.sh build --release --locked -p felucca-cli --bins
+      - name: Sign, notarize and verify copied programs
+        env:
+          FELUCCA_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE_P12_BASE64 }}
+          FELUCCA_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
+          FELUCCA_SIGNING_IDENTITY: ${{ secrets.MACOS_SIGNING_IDENTITY }}
+          FELUCCA_APPLE_ID: ${{ secrets.APPLE_ID }}
+          FELUCCA_APPLE_TEAM: ${{ secrets.APPLE_TEAM_ID }}
+          FELUCCA_APPLE_PASSWORD: ${{ secrets.APPLE_APP_PASSWORD }}
+        shell: python
+        run: |
+          import base64, os, pathlib, secrets, subprocess, tempfile
+          names = ["FELUCCA_CERTIFICATE", "FELUCCA_CERTIFICATE_PASSWORD",
+                   "FELUCCA_SIGNING_IDENTITY", "FELUCCA_APPLE_ID",
+                   "FELUCCA_APPLE_TEAM", "FELUCCA_APPLE_PASSWORD"]
+          if any(not os.environ.get(name) for name in names):
+              raise SystemExit("Configure the macos-release signing secrets before running.")
+          def quiet(args):
+              result = subprocess.run(args, capture_output=True)
+              if result.returncode:
+                  # Never include credential-bearing arguments or tool output in CI logs.
+                  raise RuntimeError("macOS release credential setup failed")
+          with tempfile.TemporaryDirectory(prefix="felucca-signing-") as temporary:
+              folder = pathlib.Path(temporary)
+              certificate = folder / "certificate.p12"
+              certificate.write_bytes(base64.b64decode(os.environ["FELUCCA_CERTIFICATE"], validate=True))
+              certificate.chmod(0o600)
+              keychain = str(folder / "release.keychain-db")
+              password = secrets.token_urlsafe(32)
+              quiet(["security", "create-keychain", "-p", password, keychain])
+              try:
+                  quiet(["security", "set-keychain-settings", "-lut", "3600", keychain])
+                  quiet(["security", "unlock-keychain", "-p", password, keychain])
+                  quiet(["security", "import", str(certificate), "-k", keychain,
+                         "-P", os.environ["FELUCCA_CERTIFICATE_PASSWORD"],
+                         "-T", "/usr/bin/codesign", "-T", "/usr/bin/security"])
+                  quiet(["security", "set-key-partition-list", "-S", "apple-tool:,apple:,codesign:",
+                         "-s", "-k", password, keychain])
+                  quiet(["xcrun", "notarytool", "store-credentials", "felucca-release",
+                         "--keychain", keychain, "--apple-id", os.environ["FELUCCA_APPLE_ID"],
+                         "--team-id", os.environ["FELUCCA_APPLE_TEAM"],
+                         "--password", os.environ["FELUCCA_APPLE_PASSWORD"]])
+                  subprocess.run(["python3", "scripts/notarize-macos.py", "--output", "target/signed",
+                                  "--identity", os.environ["FELUCCA_SIGNING_IDENTITY"],
+                                  "--keychain-profile", "felucca-release", "--keychain", keychain], check=True)
+              finally:
+                  quiet(["security", "delete-keychain", keychain])
+      - run: python3 scripts/package.py --binary-dir target/signed --output dist
+      - name: Require a notarized client package
+        shell: python
+        run: |
+          import json, pathlib, tarfile
+          archives = list(pathlib.Path("dist").glob("*.tar.gz"))
+          assert len(archives) == 1
+          with tarfile.open(archives[0]) as archive:
+              manifests = [m for m in archive.getmembers()
+                           if "/agents/" in m.name and m.name.endswith("/manifest.json")]
+              assert len(manifests) == 1
+              assert json.load(archive.extractfile(manifests[0]))["notarized"] is True
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: felucca-macos-notarized
+          path: |
+            dist/*
+            target/signed/notarization*.json
+          if-no-files-found: error

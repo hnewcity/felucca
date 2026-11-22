@@ -1,0 +1,20 @@
+server = "bridge.example.com:14028"
+vkey = "change-me-to-a-long-random-string"
+key_id = "agent-1"
+transport = "tls"  # tcp | tls | ws | wss | quic
+
+[trust]
+mode = "pinned"
+# Replace with --fingerprint from a server configured with persistent PEM files.
+fingerprint = "0000000000000000000000000000000000000000000000000000000000000000"
+# For a publicly trusted bridge certificate, use mode = "webpki" and omit fingerprint.
+
+[[tunnel]]
+mode = "tcp"
+port = 8080
+remark = "internal web app"
+# balance belongs here, before [[tunnel.backend]], if used.
+balance = "round_robin"
+
+[[tunnel.backend]]
+addr = "127.0.0.1:3000"

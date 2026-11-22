@@ -1,0 +1,71 @@
+server = "bridge.example.com:14028"
+vkey = "change-me-to-a-long-random-string"
+key_id = "agent-1"
+transport = "quic"
+max_connections = 200
+reconnect_min = "1s"
+reconnect_max = "1m"
+dial_timeout = "10s"
+
+[trust]
+mode = "pinned"
+fingerprint = "0000000000000000000000000000000000000000000000000000000000000000"
+
+[[tunnel]]
+mode = "tcp"
+port = 9000
+bind = "127.0.0.1"
+[[tunnel.backend]]
+addr = "127.0.0.1:22"
+
+[[tunnel]]
+mode = "udp"
+port = 9001
+bind = "127.0.0.1"
+[[tunnel.backend]]
+addr = "127.0.0.1:53"
+
+[[tunnel]]
+mode = "http"
+port = 8080  # matches either server http.bind or http.tls_bind; serves both
+hosts = ["app.example.test", "*.example.test"]
+balance = "weighted"  # round_robin | weighted | least_connections | source_hash | failover
+[tunnel.health]
+type = "http"
+path = "/healthz"
+interval = "10s"
+timeout = "2s"
+failures_to_evict = 3
+successes_to_restore = 2
+expect_status = [200, 204]
+[[tunnel.backend]]
+addr = "127.0.0.1:3000"
+weight = 2
+[[tunnel.backend]]
+addr = "127.0.0.1:3001"
+weight = 1
+# TLS backends: set tls = true here. Default trust is webpki.
+# [tunnel.backend.trust]
+# mode = "pinned"
+# fingerprint = "<backend SHA-256>"
+
+[[tunnel]]
+mode = "socks5"
+port = 9080
+bind = "127.0.0.1"
+acl_mode = "allow"
+acl_rules = "127.0.0.0/8, ::1/128"
+
+[[tunnel]]
+mode = "httpproxy"
+port = 9081
+bind = "127.0.0.1"
+acl_mode = "allow"
+acl_rules = "127.0.0.0/8, ::1/128"
+
+[[tunnel]]
+mode = "mixedproxy"
+port = 9082
+bind = "127.0.0.1"
+acl_mode = "allow"
+acl_rules = "127.0.0.0/8, ::1/128"

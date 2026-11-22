@@ -1,0 +1,26 @@
+# Run from the project root; see README for certificate generation.
+# Top-level port policy belongs BEFORE any [table]. Omit for ports > 1024.
+# allowed_ports = [8080, { from = 9000, to = 9100 }]
+
+[bridge]
+bind = "0.0.0.0:14028"
+# One TCP socket accepts TCP/TLS/WS/WSS. QUIC uses a separate UDP socket.
+# quic_bind = "0.0.0.0:14028"
+ws_path = "/ws"
+tls = { cert = "conf/bridge.pem", key = "conf/bridge.key" }
+
+[log]
+level = "info"
+# file = "felucca.log"   # append; also writes to stderr
+# json = true
+
+[client.agent-1]
+vkey = "change-me-to-a-long-random-string"
+remark = "the office box"
+allow_config_push = true
+# rate_limit = 10485760     # aggregate bytes/second, both directions
+# max_connections = 200
+# max_tunnels = 10
+# acl_mode = "allow"
+# acl_rules = "203.0.113.0/24"
+# quota = { flow_limit = 1073741824, expires_at = 2000000000 }

@@ -1,0 +1,21 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "The main window may call this app's own commands and listen for links.",
+  "windows": [
+    "main"
+  ],
+  "permissions": [
+    "core:event:allow-listen",
+    "core:event:allow-unlisten",
+    "allow-list",
+    "allow-language",
+    "allow-describe",
+    "allow-add",
+    "allow-remove",
+    "allow-set-enabled",
+    "allow-take-links",
+    "allow-autostart",
+    "allow-set-autostart"
+  ]
+}

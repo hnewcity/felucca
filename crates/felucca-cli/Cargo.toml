@@ -1,0 +1,65 @@
+[package]
+name = "felucca-cli"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "felucca command line entry points"
+
+[lints]
+workspace = true
+
+[dependencies]
+felucca-core.workspace = true
+felucca-i18n.workspace = true
+felucca-server.workspace = true
+felucca-client.workspace = true
+felucca-transport.workspace = true
+anyhow.workspace = true
+parking_lot.workspace = true
+fs2 = "0.4.3"
+humantime = "2.3.0"
+ring = "0.17.14"
+felucca-proto.workspace = true
+tempfile = "3.27.0"
+self-replace = "1.5.0"
+tokio-util = { workspace = true, features = ["rt"] }
+clap.workspace = true
+serde.workspace = true
+toml.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+tokio = { workspace = true, features = ["full"] }
+bytes.workspace = true
+http.workspace = true
+hyper-util.workspace = true
+http-body-util.workspace = true
+serde_json.workspace = true
+base64 = "0.22.1"
+url = "2.5.8"
+hyper-rustls = { version = "0.27.9", default-features = false, features = ["ring", "http1", "http2", "tls12"] }
+
+[target.'cfg(windows)'.dependencies]
+windows-service = "0.8.1"
+
+[target.'cfg(unix)'.dependencies]
+rustix = { version = "1.1.4", features = ["process"] }
+
+[dev-dependencies]
+felucca-service.workspace = true
+tokio-tungstenite.workspace = true
+futures-util.workspace = true
+quinn.workspace = true
+h3.workspace = true
+h3-quinn.workspace = true
+felucca-mux.workspace = true
+bytes.workspace = true
+hyper.workspace = true
+hyper-util.workspace = true
+http.workspace = true
+http-body-util.workspace = true
+tokio-rustls.workspace = true
+socket2.workspace = true
+rcgen.workspace = true
+felucca-core.workspace = true
+tracing-subscriber.workspace = true

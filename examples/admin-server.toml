@@ -1,0 +1,32 @@
+# 本机管理示例。root 的示例密码为 change-this-password。
+# 实际使用前通过 --hash-password 生成自己的密码哈希并替换下面的值。
+[bridge]
+bind = "127.0.0.1:14028"
+
+[admin]
+bind = "127.0.0.1:8990"
+state_path = "state/runtime-config.json"
+
+[admin.account.root]
+role = "admin"
+password_hash = "pbkdf2-sha256$600000$f1e2d3c4b5a69788796a5b4c3d2e1f00$8211d82084b98d13302553691bbfdc45da910a192a52a5a50ebd682d08a20bae"
+
+[state]
+path = "state/traffic.json"
+save_interval = "5s"
+
+[user.office.limits]
+max_connections = 128
+
+[client.office]
+user = "office"
+vkey = "replace-with-a-random-shared-key"
+allow_config_push = false
+
+# 这里的配置会发送给明确开启 remote.enabled 的 office agent。
+[[managed.office.tunnel]]
+id = 1
+mode = "tcp"
+port = 18080
+bind = "127.0.0.1"
+backend = [{ addr = "127.0.0.1:3000" }]

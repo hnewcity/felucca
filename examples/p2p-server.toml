@@ -1,0 +1,26 @@
+# Replace node keys/share secrets and advertise the broker's reachable UDP address.
+[bridge]
+bind = "0.0.0.0:14028"
+[p2p]
+bind = "0.0.0.0:8025"
+advertise = "127.0.0.1:8025"
+timeout = "5s"
+max_pending = 128
+[client.office]
+vkey = "replace-office-node-key"
+allow_config_push = true
+[client.laptop]
+vkey = "replace-laptop-node-key"
+allow_config_push = false
+[share.office-web]
+client = "office"
+tunnel = 1
+secret = "replace-this-shared-secret"
+allow_clients = ["laptop"]
+direct = true
+[share.office-dns]
+client = "office"
+tunnel = 2
+secret = "replace-this-shared-secret"
+allow_clients = ["laptop"]
+direct = true

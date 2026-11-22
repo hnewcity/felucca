@@ -1,0 +1,21 @@
+server = "bridge.example.com:8025"
+key_id = "agent-1"
+vkey = "replace-with-your-bridge-key"
+transport = "kcp"
+
+[kcp]
+data_shards = 10
+parity_shards = 3
+mtu = 1200
+send_window = 256
+receive_window = 256
+interval_ms = 20
+session_timeout = "90s"
+
+[[tunnel]]
+mode = "tcp"
+port = 8080
+backend = [{ addr = "127.0.0.1:3000" }]
+[tunnel.options.payload]
+compress = true
+encrypt = true

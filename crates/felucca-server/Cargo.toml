@@ -1,0 +1,69 @@
+[package]
+name = "felucca-server"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "felucca server: tunnel registry, port forwarding, HTTP/HTTPS reverse proxy, SOCKS5 and HTTP forward proxy"
+
+[lints]
+workspace = true
+
+[build-dependencies]
+sha2.workspace = true
+
+[dependencies]
+felucca-core.workspace = true
+felucca-i18n.workspace = true
+felucca-proto.workspace = true
+felucca-mux.workspace = true
+felucca-transport.workspace = true
+felucca-service.workspace = true
+bytes.workspace = true
+futures-util.workspace = true
+dashmap.workspace = true
+parking_lot.workspace = true
+arc-swap.workspace = true
+ipnet.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+uuid.workspace = true
+tokio = { workspace = true, features = ["full"] }
+tokio-util = { workspace = true, features = ["rt"] }
+hyper.workspace = true
+hyper-util.workspace = true
+http.workspace = true
+http-body-util.workspace = true
+httparse.workspace = true
+rustls.workspace = true
+tokio-rustls.workspace = true
+quinn.workspace = true
+tokio-tungstenite.workspace = true
+hyper-rustls = { version = "0.27.9", default-features = false, features = ["ring", "http1", "http2", "tls12"] }
+h3.workspace = true
+h3-quinn.workspace = true
+
+instant-acme = { version = "0.8.5", default-features = false, features = ["ring", "hyper-rustls"] }
+x509-parser = "0.18.1"
+anyhow.workspace = true
+base64 = "0.22.1"
+tower-service = "0.3.3"
+rcgen.workspace = true
+fs2 = "0.4.3"
+sysinfo = { version = "=0.37.2", default-features = false, features = ["system", "disk", "network"] }
+ring = "0.17.14"
+subtle.workspace = true
+percent-encoding = "2.3.2"
+
+[target.'cfg(any(target_os = "linux", target_os = "macos"))'.dependencies]
+pprof = { version = "0.14.1", default-features = false, features = ["flamegraph"] }
+
+[dev-dependencies]
+hmac.workspace = true
+sha2.workspace = true
+rcgen = { workspace = true, features = ["x509-parser"] }
+tracing-subscriber.workspace = true
+# `full` deliberately excludes test-util; the timeout tests need a paused clock.
+tokio = { workspace = true, features = ["full", "test-util"] }

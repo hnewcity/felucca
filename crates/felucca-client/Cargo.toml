@@ -1,0 +1,46 @@
+[package]
+name = "felucca-client"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "felucca client: control loop, worker streams and local dialing"
+
+[lints]
+workspace = true
+
+[dependencies]
+felucca-core.workspace = true
+felucca-proto.workspace = true
+felucca-mux.workspace = true
+felucca-transport.workspace = true
+felucca-service.workspace = true
+bytes.workspace = true
+futures-util.workspace = true
+dashmap.workspace = true
+parking_lot.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+tokio = { workspace = true, features = ["full"] }
+tokio-util.workspace = true
+socket2.workspace = true
+quinn.workspace = true
+rand.workspace = true
+
+httparse.workspace = true
+hyper.workspace = true
+hyper-util.workspace = true
+http.workspace = true
+http-body-util.workspace = true
+base64 = "0.22.1"
+dav-server = { version = "0.11.0", default-features = false }
+cap-std = "4.0.3"
+
+[target.'cfg(unix)'.dependencies]
+libc = "0.2.189"
+
+[dev-dependencies]
+tracing-subscriber.workspace = true
+tokio = { workspace = true, features = ["test-util"] }

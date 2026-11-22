@@ -1,0 +1,15 @@
+# Local demonstration; pair with file-agent.toml.
+allowed_ports = [9001]
+acl_mode = "allow"
+acl_rules = "127.0.0.0/8, ::1"
+
+[bridge]
+bind = "127.0.0.1:14028"
+
+[http]
+bind = "127.0.0.1:8081"
+tls_bind = ""
+
+[client.files]
+vkey = "replace-with-a-long-random-secret"
+allow_config_push = true

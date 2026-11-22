@@ -1,0 +1,50 @@
+# Rust build output
+/target
+**/*.rs.bk
+*.pdb
+
+# Local configuration and credentials
+/felucca-server.toml
+/felucca-server.data/
+/conf/*.local.toml
+/conf/*.pem
+/conf/*.key
+/conf/orbstack/
+/conf/acme*/
+/acme/
+.env
+.env.*
+!.env.example
+!.env.*.example
+!.env.sample
+!.env.*.sample
+
+# Runtime logs
+/felucca.log
+npm-debug.log*
+
+# Python caches and virtual environments
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Release packages and frontend output
+/dist
+/apps/admin/node_modules/
+/apps/admin/dist/
+/apps/admin/coverage/
+/apps/desktop/node_modules/
+/apps/desktop/dist/
+/apps/desktop/src-tauri/target/
+/apps/desktop/src-tauri/gen/
+
+# OS metadata and editor temporary files
+.DS_Store
+._*
+Thumbs.db
+*.swp
+*.swo
+*~

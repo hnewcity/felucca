@@ -1,0 +1,42 @@
+# Pair with policy-agent.toml. Source ACLs intersect across every scope.
+acl_mode = "allow"
+acl_rules = "geoip:private"
+allowed_ports = [9000]
+
+[state]
+path = "data/traffic.json"
+save_interval = "5s"
+
+[bridge]
+bind = "127.0.0.1:14028"
+
+[http]
+bind = "127.0.0.1:8080"
+tls_bind = ""
+
+[http.host_limit."app.example.test"]
+max_connections = 20
+rate_limit = 1048576
+quota = { flow_limit = 1073741824 }
+
+[user.team]
+acl_mode = "allow"
+acl_rules = "127.0.0.0/8, ::1"
+
+[user.team.limits]
+max_connections = 50
+rate_limit = 2097152
+quota = { flow_limit = 10737418240 }
+
+[client.policy]
+vkey = "replace-with-a-long-random-secret"
+user = "team"
+allow_config_push = true
+max_connections = 30
+
+# Optional protobuf datasets; paths refer to this process's working directory.
+# [geo]
+# geoip = "data/geoip.dat"
+# geosite = "data/geosite.dat"
+# [geo.extra]
+# custom = "data/custom.dat"

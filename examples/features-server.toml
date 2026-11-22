@@ -1,0 +1,33 @@
+allowed_ports = [{ from = 9000, to = 9100 }]
+
+[bridge]
+bind = "0.0.0.0:14028"
+quic_bind = "0.0.0.0:14028"
+tls = { cert = "conf/bridge.pem", key = "conf/bridge.key" }
+
+[http]
+bind = "0.0.0.0:8080"
+tls_bind = "0.0.0.0:8443"  # use "" to disable HTTPS
+forwarded_headers = true
+response_timeout = "100s"
+# Provision public certificates covering these names before starting.
+[http.certificates."app.example.test"]
+cert = "conf/app.pem"
+key = "conf/app.key"
+[http.certificates."*.example.test"]
+cert = "conf/wildcard.pem"
+key = "conf/wildcard.key"
+
+[log]
+level = "info"
+json = true
+file = "felucca.log"
+
+[client.agent-1]
+vkey = "change-me-to-a-long-random-string"
+allow_config_push = true
+max_tunnels = 10
+max_connections = 200
+# Applied to incoming public users, not to the agent's bridge connection.
+# acl_mode = "allow"
+# acl_rules = "203.0.113.0/24"

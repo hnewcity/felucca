@@ -1,0 +1,31 @@
+# WSS bridge through an authenticated SOCKS5 proxy.
+# All example addresses below must be replaced for your deployment.
+server = "bridge.example.com:8443"
+key_id = "agent-1"
+vkey = "replace-with-your-bridge-key"
+transport = "wss"
+
+[network]
+# local_ip = "192.0.2.10"   # must belong to this machine
+# forward_local_ip = true  # also bind backend and health probe connections
+dns = ["192.0.2.53:53"]
+
+[network.proxy]
+kind = "socks5"            # or "http" for HTTP CONNECT
+server = "192.0.2.20:1080"
+remote_dns = true
+[network.proxy.auth]
+username = "edge"
+password = "replace-with-proxy-password"
+
+# SNTP uses direct UDP, independently of the TCP proxy.
+[ntp]
+server = "time.example.com:123"
+interval = "5m"
+timeout = "5s"
+max_offset = "24h"
+
+[[tunnel]]
+mode = "tcp"
+port = 8080
+backend = [{ addr = "127.0.0.1:3000" }]

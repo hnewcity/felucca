@@ -1,0 +1,13 @@
+[package]
+name = "felucca-i18n"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "Locale negotiation, message catalogs and interpolated messages for felucca"
+
+[lints]
+workspace = true
+
+[dependencies]
+serde_json.workspace = true

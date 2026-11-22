@@ -1,0 +1,30 @@
+# Replace both node keys and the shared secret before deployment.
+[bridge]
+bind = "0.0.0.0:14028"
+
+[client.office]
+vkey = "replace-office-node-key"
+allow_config_push = true
+
+[client.laptop]
+vkey = "replace-laptop-node-key"
+allow_config_push = false
+
+[share.office-web]
+client = "office"
+tunnel = 1
+secret = "replace-this-shared-secret"
+allow_clients = ["laptop"]
+
+[share.office-dns]
+client = "office"
+tunnel = 2
+secret = "replace-this-shared-secret"
+allow_clients = ["laptop"]
+
+[share.office-proxy]
+client = "office"
+tunnel = 3
+secret = "replace-this-shared-secret"
+allow_clients = ["laptop"]
+dynamic = true
