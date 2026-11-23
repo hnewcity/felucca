@@ -67,7 +67,7 @@ impl Resolver {
             socket.listen(1024)?;
             return TcpListener::from_std(socket.into());
         }
-        TcpListener::bind(address).await
+        crate::tcp::listen(address)
     }
 
     pub fn destination(&self, stream: &TcpStream, listener: SocketAddr) -> io::Result<SocketAddr> {

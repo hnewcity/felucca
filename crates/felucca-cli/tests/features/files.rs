@@ -23,7 +23,7 @@ mode = "file"
 port = {port}
 bind = "127.0.0.1"
 [tunnel.file]
-root = "{}"
+root = '{}'
 prefix = "/dav"
 read_only = {readonly}
 [tunnel.options.payload]
@@ -185,7 +185,7 @@ mode = "file"
 port = {port}
 hosts = ["files.test"]
 [tunnel.file]
-root = "{}"
+root = '{}'
 read_only = false
 [tunnel.options.http]
 backend_http2 = true

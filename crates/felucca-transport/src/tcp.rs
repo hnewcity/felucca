@@ -69,13 +69,32 @@ fn probes(keepalive: socket2::TcpKeepalive) -> socket2::TcpKeepalive {
 }
 
 /// Binds a TCP listener.
+///
+/// An unspecified IPv6 address (`[::]`) means every interface, IPv4 included.
+/// Linux and macOS accept IPv4 on such a socket by default; Windows and some
+/// BSDs default to `IPV6_V6ONLY`, so it is cleared explicitly.
 pub async fn bind(addr: SocketAddr) -> Result<TcpListener, TransportError> {
-    TcpListener::bind(addr)
-        .await
-        .map_err(|source| TransportError::Bind {
-            addr: addr.to_string(),
-            source,
-        })
+    listen(addr).map_err(|source| TransportError::Bind {
+        addr: addr.to_string(),
+        source,
+    })
+}
+
+/// [`bind`] without the error wrapping, for callers that report `io::Error`.
+pub fn listen(addr: SocketAddr) -> std::io::Result<TcpListener> {
+    use socket2::{Domain, Protocol, Socket, Type};
+    let socket = Socket::new(Domain::for_address(addr), Type::STREAM, Some(Protocol::TCP))?;
+    if crate::udp::dual_stack(addr) {
+        socket.set_only_v6(false)?;
+    }
+    // Match std/tokio: reuse a TIME_WAIT port on Unix. Windows SO_REUSEADDR
+    // would allow two live listeners on one port, so it is left unset there.
+    #[cfg(unix)]
+    socket.set_reuse_address(true)?;
+    socket.bind(&addr.into())?;
+    socket.listen(1024)?;
+    socket.set_nonblocking(true)?;
+    TcpListener::from_std(socket.into())
 }
 
 /// Accepts one connection, tuned and ready to use.
@@ -108,6 +127,31 @@ mod tests {
 
     async fn loopback() -> TcpListener {
         bind("127.0.0.1:0".parse().unwrap()).await.unwrap()
+    }
+
+    /// A tunnel without a bind host listens on `[::]` and must still accept
+    /// IPv4, including on Windows where IPV6_V6ONLY defaults to on.
+    #[tokio::test]
+    async fn an_ipv6_wildcard_listener_accepts_ipv4_and_udp_does_too() {
+        let Ok(listener) = bind("[::]:0".parse().unwrap()).await else {
+            return; // IPv6 disabled on this host.
+        };
+        let port = listener.local_addr().unwrap().port();
+        let (accepted, connected) =
+            tokio::join!(listener.accept(), TcpStream::connect(("127.0.0.1", port)));
+        accepted.unwrap();
+        connected.unwrap();
+
+        let socket = crate::udp::bind_plain("[::]:0").await.unwrap();
+        let port = socket.local_addr().unwrap().port();
+        let sender = tokio::net::UdpSocket::bind("127.0.0.1:0").await.unwrap();
+        sender.send_to(b"v4", ("127.0.0.1", port)).await.unwrap();
+        let mut buffer = [0; 2];
+        let (len, _) = tokio::time::timeout(Duration::from_secs(5), socket.recv_from(&mut buffer))
+            .await
+            .unwrap()
+            .unwrap();
+        assert_eq!(&buffer[..len], b"v4");
     }
 
     #[tokio::test]

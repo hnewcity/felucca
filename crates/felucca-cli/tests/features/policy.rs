@@ -327,8 +327,8 @@ async fn geodata_files_drive_source_and_resolved_destination_policies() {
     let config = agent(&format!(
         r#"
 [geo]
-geoip = "{}"
-geosite = "{}"
+geoip = '{}'
+geosite = '{}'
 [[tunnel]]
 mode = "tcp"
 port = {allowed}

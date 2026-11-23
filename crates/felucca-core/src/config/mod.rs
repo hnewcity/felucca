@@ -216,8 +216,8 @@ pub fn parse_bind_host(host: Option<&str>, port: u16) -> Result<std::net::Socket
     use std::net::{IpAddr, Ipv6Addr, SocketAddr};
 
     let Some(host) = host.map(str::trim).filter(|h| !h.is_empty()) else {
-        // Every interface, v4 and v6: an unspecified v6 socket accepts v4 too on
-        // every platform felucca targets.
+        // Every interface, v4 and v6. The transport clears IPV6_V6ONLY on an
+        // unspecified v6 socket, which Windows otherwise sets by default.
         return Ok(SocketAddr::new(IpAddr::V6(Ipv6Addr::UNSPECIFIED), port));
     };
 

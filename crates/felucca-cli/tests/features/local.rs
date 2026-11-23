@@ -212,7 +212,7 @@ mode="file"
 port={http}
 hosts=["files.test"]
 [local.office.tunnel.file]
-root="{}"
+root='{}'
 read_only=true
 [local.office.tunnel.file.auth.users]
 alice="password"
@@ -549,7 +549,7 @@ mode="file"
 port={remote}
 bind="127.0.0.1"
 [tunnel.file]
-root="{}"
+root='{}'
 read_only=true
 [tunnel.file.auth.users]
 alice="password"

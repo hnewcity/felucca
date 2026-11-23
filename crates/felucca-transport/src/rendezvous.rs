@@ -87,7 +87,7 @@ impl Broker {
         }
         let mut random = [0; 32];
         rand::fill(&mut random);
-        let socket = UdpSocket::bind(address).await?;
+        let socket = crate::udp::bind_plain(address).await?;
         Ok(Arc::new(Self {
             socket: Arc::new(socket),
             entries: Mutex::new(HashMap::new()),

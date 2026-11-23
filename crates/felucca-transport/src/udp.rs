@@ -16,11 +16,49 @@ pub const INGRESS_RECEIVE_BYTES: usize = 1024 * 1024;
 pub const INGRESS_RECEIVE_BYTES: usize = 2 * 1024 * 1024;
 
 pub async fn bind(address: impl ToSocketAddrs) -> std::io::Result<UdpSocket> {
-    let socket = UdpSocket::bind(address).await?;
+    let socket = bind_plain(address).await?;
     let reference = socket2::SockRef::from(&socket);
     reference.set_send_buffer_size(256 * 1024)?;
     reference.set_recv_buffer_size(256 * 1024)?;
     Ok(socket)
+}
+
+/// Whether `address` is the IPv6 wildcard, which felucca treats as every
+/// interface including IPv4. See [`crate::tcp::bind`].
+pub(crate) fn dual_stack(address: std::net::SocketAddr) -> bool {
+    matches!(address, std::net::SocketAddr::V6(v6) if v6.ip().is_unspecified())
+}
+
+/// Binds a UDP socket with the OS default buffers. An IPv6 wildcard address
+/// also receives IPv4, as for TCP listeners.
+pub async fn bind_plain(address: impl ToSocketAddrs) -> std::io::Result<UdpSocket> {
+    let mut last = None;
+    for address in tokio::net::lookup_host(address).await? {
+        let result = (|| {
+            use socket2::{Domain, Protocol, Socket, Type};
+            let socket = Socket::new(
+                Domain::for_address(address),
+                Type::DGRAM,
+                Some(Protocol::UDP),
+            )?;
+            if dual_stack(address) {
+                socket.set_only_v6(false)?;
+            }
+            socket.bind(&address.into())?;
+            socket.set_nonblocking(true)?;
+            UdpSocket::from_std(socket.into())
+        })();
+        match result {
+            Ok(socket) => return Ok(socket),
+            Err(error) => last = Some(error),
+        }
+    }
+    Err(last.unwrap_or_else(|| {
+        std::io::Error::new(
+            std::io::ErrorKind::InvalidInput,
+            "could not resolve to any address",
+        )
+    }))
 }
 
 /// Bind a public/visitor/SOCKS ingress, whose socket receives complete bursts.

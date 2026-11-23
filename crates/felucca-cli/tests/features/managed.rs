@@ -25,15 +25,17 @@ async fn body(port: u16) -> String {
     .await
 }
 async fn wait_body(port: u16, expected: &str) {
-    tokio::time::timeout(Duration::from_secs(10), async {
+    tokio::time::timeout(Duration::from_secs(30), async {
         loop {
             if let Ok(mut io) = TcpStream::connect(("127.0.0.1", port)).await {
                 let _ = io
                     .write_all(b"GET / HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n")
                     .await;
                 let mut response = String::new();
+                // Windows retries a refused loopback connect for about two
+                // seconds before `localhost` falls back from ::1 to 127.0.0.1.
                 if let Ok(Ok(_)) =
-                    tokio::time::timeout(Duration::from_secs(1), io.read_to_string(&mut response))
+                    tokio::time::timeout(Duration::from_secs(5), io.read_to_string(&mut response))
                         .await
                     && response.contains(expected)
                 {
@@ -489,8 +491,15 @@ async fn managed_files_use_preopened_capabilities_and_refuse_write_escalation() 
     let authority = felucca_service::remote::RemoteAuthority::new(&config.remote, &geo).unwrap();
     // Replace the ambient path after opening the capability. It must retain the
     // old directory, and never accidentally serve the replacement directory.
-    std::fs::rename(&root, files.root.join("retained")).unwrap();
-    std::fs::create_dir(&root).unwrap();
+    // Windows refuses to rename a directory while the capability holds it open,
+    // which rules out the swap by itself.
+    #[cfg(unix)]
+    {
+        std::fs::rename(&root, files.root.join("retained")).unwrap();
+        std::fs::create_dir(&root).unwrap();
+    }
+    #[cfg(windows)]
+    assert!(std::fs::rename(&root, files.root.join("retained")).is_err());
     let mut managed = managed;
     managed.validate(&geo).unwrap();
     let network = Arc::new(

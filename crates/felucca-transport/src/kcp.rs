@@ -80,7 +80,7 @@ impl Drop for KcpListener {
 impl KcpListener {
     pub async fn bind(config: &KcpConfig, address: SocketAddr) -> io::Result<Self> {
         config.validate().map_err(io::Error::other)?;
-        let socket = Arc::new(UdpSocket::bind(address).await?);
+        let socket = Arc::new(crate::udp::bind_plain(address).await?);
         let address = socket.local_addr()?;
         let (tx, accepted) = mpsc::channel(config.max_sessions.min(128));
         let config = config.clone();
