@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600" font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Helvetica, Arial, sans-serif'>
+  <rect width="1200" height="600" rx="24" fill="#ffffff"/>
+  <text x="40" y="92" font-size="14" fill="#5f6873" font-weight="600" text-anchor="start">Anyone on the internet</text>
+  <g><rect x="40" y="120" width="190" height="56" rx="14" fill="#f4f5f7" stroke="#d9dde3"/><g fill="none" stroke="#494fdf" stroke-width="2"><circle cx="66" cy="148" r="11"/><path d="M55 148h22M66 137c-6 6-6 16 0 22c6-6 6-16 0-22"/></g><text x="98" y="153" font-size="15" fill="#191c1f" font-weight="500" text-anchor="start">Browser</text></g><g><rect x="40" y="196" width="190" height="56" rx="14" fill="#f4f5f7" stroke="#d9dde3"/><g fill="none" stroke="#494fdf" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M57 217l7 7-7 7M67 232h9"/></g><text x="98" y="229" font-size="15" fill="#191c1f" font-weight="500" text-anchor="start">SSH client</text></g><g><rect x="40" y="272" width="190" height="56" rx="14" fill="#f4f5f7" stroke="#d9dde3"/><g fill="none" stroke="#494fdf" stroke-width="2"><rect x="54" y="292" width="24" height="16" rx="7"/><path d="M60 300h5M62.5 297.5v5"/><circle cx="71" cy="300" r="1.4" fill="#494fdf"/></g><text x="98" y="305" font-size="15" fill="#191c1f" font-weight="500" text-anchor="start">Game client</text></g>
+  <path d="M230 148 C 300 148, 330 190, 430 205" fill="none" stroke="#494fdf" stroke-opacity=".35" stroke-width="2" stroke-dasharray="5 6"/>
+    <circle r="4.5" fill="#494fdf"><animateMotion dur="2.4s" begin="0s" repeatCount="indefinite" path="M230 148 C 300 148, 330 190, 430 205" keyPoints="0;1" keyTimes="0;1" calcMode="linear"/></circle>
+  <path d="M230 224 C 300 224, 340 230, 430 235" fill="none" stroke="#494fdf" stroke-opacity=".35" stroke-width="2" stroke-dasharray="5 6"/>
+    <circle r="4.5" fill="#494fdf"><animateMotion dur="2.4s" begin="-0.8s" repeatCount="indefinite" path="M230 224 C 300 224, 340 230, 430 235" keyPoints="0;1" keyTimes="0;1" calcMode="linear"/></circle>
+  <path d="M230 300 C 300 300, 330 270, 430 265" fill="none" stroke="#494fdf" stroke-opacity=".35" stroke-width="2" stroke-dasharray="5 6"/>
+    <circle r="4.5" fill="#494fdf"><animateMotion dur="2.4s" begin="-1.6s" repeatCount="indefinite" path="M230 300 C 300 300, 330 270, 430 265" keyPoints="0;1" keyTimes="0;1" calcMode="linear"/></circle>
+  <g>
+    <rect x="430" y="120" width="330" height="360" rx="22" fill="#191c1f"/>
+    <g transform="translate(456 144) scale(0.72)"><path d="M4 30 22 1v29H4Zm22 0V12l10 18H26ZM3 35h34l-6 5H9l-6-5Z" fill="#ffffff"/></g>
+    <text x="496" y="164" font-size="19" fill="#ffffff" font-weight="700" text-anchor="start">felucca-server</text>
+    <text x="496" y="186" font-size="13" fill="#b8bec6" font-weight="500" text-anchor="start">Public host · one binary</text>
+    <text x="456" y="226" font-size="12.5" fill="#b8bec6" font-weight="600" text-anchor="start">Public entry points</text>
+    <rect x="456" y="238" width="278" height="32" rx="9" fill="#ffffff" fill-opacity=".09"/><text x="470" y="259" font-size="13.5" fill="#ffffff" font-weight="550" text-anchor="start">Ports · TCP / UDP</text><rect x="456" y="278" width="278" height="32" rx="9" fill="#ffffff" fill-opacity=".09"/><text x="470" y="299" font-size="13.5" fill="#ffffff" font-weight="550" text-anchor="start">Domains · HTTP 1.1 / 2 / 3</text><rect x="456" y="318" width="278" height="32" rx="9" fill="#ffffff" fill-opacity=".09"/><text x="470" y="339" font-size="13.5" fill="#ffffff" font-weight="550" text-anchor="start">SOCKS5 · HTTP proxy · files</text>
+    <rect x="456" y="366" width="278" height="32" rx="9" fill="#ffffff" fill-opacity=".09"/><text x="470" y="387" font-size="13.5" fill="#ffffff" font-weight="550" text-anchor="start">Web console · :8990</text>
+    <rect x="456" y="418" width="278" height="38" rx="10" fill="#00a87e" fill-opacity=".2" stroke="#00a87e" stroke-opacity=".6"/><text x="470" y="442" font-size="13" fill="#ffffff" font-weight="600" text-anchor="start">Bridge · TLS · WSS · QUIC · KCP · :14028</text>
+  </g>
+  <line x1="800" y1="40" x2="800" y2="560" stroke="#ec7e00" stroke-width="2" stroke-dasharray="3 7" stroke-linecap="round"/>
+  <g transform="translate(812 64)"><rect x="0" y="-18" width="248" height="28" rx="14" fill="#ec7e00" fill-opacity=".14"/><text x="14" y="1" font-size="12.5" fill="#ec7e00" font-weight="650" text-anchor="start">⛨ NAT / firewall · no inbound ports</text></g>
+  <g>
+    <rect x="840" y="100" width="330" height="196" rx="18" fill="#f4f5f7" stroke="#d9dde3"/>
+    <text x="862" y="132" font-size="14" fill="#5f6873" font-weight="600" text-anchor="start">Office network</text>
+    <rect id="a1" x="862" y="148" width="140" height="124" rx="14" fill="#ffffff" stroke="#d9dde3"/>
+    <g transform="translate(880 166) scale(0.62)"><path d="M4 30 22 1v29H4Zm22 0V12l10 18H26ZM3 35h34l-6 5H9l-6-5Z" fill="#191c1f"/></g><text x="880" y="212" font-size="13.5" fill="#191c1f" font-weight="650" text-anchor="start">felucca-agent</text>
+    <text x="880" y="234" font-size="12.5" fill="#00a87e" font-weight="600" text-anchor="start">↑ dials out</text>
+    <rect x="1016" y="148" width="134" height="34" rx="10" fill="#ffffff" stroke="#d9dde3"/><text x="1028" y="170" font-size="12.5" fill="#191c1f" font-weight="500" text-anchor="start">Team wiki · :3000</text><rect x="1016" y="191" width="134" height="34" rx="10" fill="#ffffff" stroke="#d9dde3"/><text x="1028" y="213" font-size="12.5" fill="#191c1f" font-weight="500" text-anchor="start">NAS files</text><rect x="1016" y="234" width="134" height="34" rx="10" fill="#ffffff" stroke="#d9dde3"/><text x="1028" y="256" font-size="12.5" fill="#191c1f" font-weight="500" text-anchor="start">SSH · :22</text>
+    <path d="M1002 210h14" stroke="#d9dde3" stroke-width="2"/>
+  </g>
+  <g>
+    <rect x="840" y="340" width="330" height="196" rx="18" fill="#f4f5f7" stroke="#d9dde3"/>
+    <text x="862" y="372" font-size="14" fill="#5f6873" font-weight="600" text-anchor="start">Home lab</text>
+    <rect id="a2" x="862" y="388" width="140" height="124" rx="14" fill="#ffffff" stroke="#d9dde3"/>
+    <g transform="translate(880 406) scale(0.62)"><path d="M4 30 22 1v29H4Zm22 0V12l10 18H26ZM3 35h34l-6 5H9l-6-5Z" fill="#191c1f"/></g><text x="880" y="452" font-size="13.5" fill="#191c1f" font-weight="650" text-anchor="start">felucca-agent</text>
+    <text x="880" y="474" font-size="12.5" fill="#00a87e" font-weight="600" text-anchor="start">↑ dials out</text>
+    <rect x="1016" y="388" width="134" height="34" rx="10" fill="#ffffff" stroke="#d9dde3"/><text x="1028" y="410" font-size="12.5" fill="#191c1f" font-weight="500" text-anchor="start">Dashboard · :8123</text><rect x="1016" y="431" width="134" height="34" rx="10" fill="#ffffff" stroke="#d9dde3"/><text x="1028" y="453" font-size="12.5" fill="#191c1f" font-weight="500" text-anchor="start">Minecraft · UDP</text><rect x="1016" y="474" width="134" height="34" rx="10" fill="#ffffff" stroke="#d9dde3"/><text x="1028" y="496" font-size="12.5" fill="#191c1f" font-weight="500" text-anchor="start">Postgres · private</text>
+    <path d="M1002 450h14" stroke="#d9dde3" stroke-width="2"/>
+  </g>
+  <path d="M862 210 C 800 210, 820 432, 760 432" fill="none" stroke="#00a87e" stroke-opacity=".35" stroke-width="2" stroke-dasharray="5 6"/>
+    <circle r="4.5" fill="#00a87e"><animateMotion dur="2.2s" begin="-0.3s" repeatCount="indefinite" path="M862 210 C 800 210, 820 432, 760 432" keyPoints="0;1" keyTimes="0;1" calcMode="linear"/></circle>
+  <path d="M862 450 C 820 450, 810 440, 760 440" fill="none" stroke="#00a87e" stroke-opacity=".35" stroke-width="2" stroke-dasharray="5 6"/>
+    <circle r="4.5" fill="#00a87e"><animateMotion dur="2.2s" begin="-1.2s" repeatCount="indefinite" path="M862 450 C 820 450, 810 440, 760 440" keyPoints="0;1" keyTimes="0;1" calcMode="linear"/></circle>
+  <g>
+    <rect x="430" y="510" width="200" height="50" rx="14" fill="#f4f5f7" stroke="#d9dde3"/>
+    <g fill="none" stroke="#494fdf" stroke-width="2"><rect x="448" y="526" width="26" height="17" rx="3"/><path d="M444 547h34"/></g>
+    <text x="488" y="540" font-size="14" fill="#191c1f" font-weight="500" text-anchor="start">Laptop · visitor</text>
+  </g>
+  <path d="M630 535 C 760 535, 800 520, 862 520" fill="none" stroke="#ec7e00" stroke-opacity=".35" stroke-width="2" stroke-dasharray="5 6"/>
+    <circle r="4" fill="#ec7e00"><animateMotion dur="2.6s" begin="-0.5s" repeatCount="indefinite" path="M630 535 C 760 535, 800 520, 862 520" keyPoints="0;1" keyTimes="0;1" calcMode="linear"/></circle>
+  <text x="650" y="584" font-size="12.5" fill="#5f6873" font-weight="500" text-anchor="start">P2P direct when possible, relay otherwise</text>
+</svg>
