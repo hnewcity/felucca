@@ -14,6 +14,8 @@ async fn kcp_agent_reconnects_after_server_restart_and_rejects_wrong_keys() {
         "[[tunnel]]\nmode='tcp'\nport={port}\nbind='127.0.0.1'\nbackend=[{{addr='127.0.0.1:{backend}'}}]"
     ));
     config.dial_timeout = Duration::from_secs(2);
+    // Failed dials during the restart must not back off past the 10 s window below.
+    config.reconnect_max = Duration::from_secs(1);
     let running = start(settings.clone(), config, TransportKind::Kcp).await;
     roundtrip(TcpStream::connect(("127.0.0.1", port)).await.unwrap()).await;
     let mut wrong = felucca_transport::kcp::connect(&Default::default(), bridge, None)

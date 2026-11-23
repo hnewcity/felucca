@@ -204,6 +204,7 @@ async fn nested_file_routes_retain_authentication_and_cannot_impersonate_another
         r#"
 [http]
 bind="127.0.0.1:{http}"
+tls_bind=""
 {}
 [[local.office.tunnel]]
 id=2
@@ -589,6 +590,7 @@ async fn web_bridge_preserves_host_routing_and_site_authentication() {
         r#"
 [http]
 bind="127.0.0.1:{web}"
+tls_bind=""
 {}
 [[local.office.tunnel]]
 id=2

@@ -176,6 +176,7 @@ impl DavFileSystem for ConfinedFs {
         let path = path(dav);
         blocking(move || {
             this.writable()?;
+            #[cfg_attr(not(unix), allow(unused_mut))]
             let mut builder = cap_std::fs::DirBuilder::new();
             #[cfg(unix)]
             {

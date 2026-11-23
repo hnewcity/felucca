@@ -1010,7 +1010,8 @@ async fn cpu_profile_requires_opt_in_admin_and_serializes_real_sampling() {
     let first = root.clone();
     let profile = tokio::spawn(async move {
         first
-            .send(
+            .send_within(
+                Duration::from_secs(60),
                 "POST",
                 "/api/profile",
                 Some(json!({"seconds":2})),

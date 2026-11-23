@@ -434,6 +434,7 @@ async fn websocket_rejects_bad_frontend_keys_and_backend_accept_proofs() {
     let mut server = server_config();
     server.http = Some(HttpProxyConfig {
         bind: Some(format!("127.0.0.1:{port}")),
+        tls_bind: None,
         ..Default::default()
     });
     let _running = start(server, agent(&format!(

@@ -99,6 +99,20 @@ impl Api {
         revision: u64,
         key: &str,
     ) -> Reply {
+        self.send_within(Duration::from_secs(10), method, path, body, revision, key)
+            .await
+    }
+    /// Like `send`, for endpoints whose work legitimately outlasts the default
+    /// wait, such as CPU sampling plus flamegraph rendering on a loaded runner.
+    pub(crate) async fn send_within(
+        &self,
+        wait: Duration,
+        method: &str,
+        path: &str,
+        body: Option<Value>,
+        revision: u64,
+        key: &str,
+    ) -> Reply {
         let mut io = TcpStream::connect(("127.0.0.1", self.port)).await.unwrap();
         let bytes = body.map_or_else(Vec::new, |v| serde_json::to_vec(&v).unwrap());
         let mut request = format!(
@@ -117,7 +131,7 @@ impl Api {
         // These non-streaming endpoints return Content-Length. Read that frame,
         // not TCP EOF: rejecting a request before consuming its body may reset
         // the socket after an otherwise complete HTTP response has arrived.
-        let raw = tokio::time::timeout(Duration::from_secs(10), async {
+        let raw = tokio::time::timeout(wait, async {
             use tokio::io::AsyncBufReadExt;
             let mut io = tokio::io::BufReader::new(io);
             let mut head = String::new();
