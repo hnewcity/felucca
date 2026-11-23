@@ -1,6 +1,6 @@
 //! Safe SCM wrapper. Only the upstream generated FFI entry point permits unsafe.
-use super::messages::say;
 use super::{Action, Definition, MARKER, Platform};
+use crate::messages::say;
 use anyhow::{Context, ensure};
 use std::{
     ffi::{OsStr, OsString},
