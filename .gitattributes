@@ -1,0 +1,3 @@
+# Check out LF everywhere: tests parse Rust sources and compare embedded text,
+# and a Windows CRLF checkout changes string continuations and digests.
+* text=auto eol=lf
