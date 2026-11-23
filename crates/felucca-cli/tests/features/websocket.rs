@@ -158,15 +158,8 @@ async fn run(front: u8, back_h2: bool) {
     let closed = Arc::new(AtomicUsize::new(0));
     let backend_port = backend(back_h2, &mut tasks, closed.clone()).await;
     let tcp_port = free_port().await;
-    // Hold both UDP sockets together so HTTP/3 and the QUIC bridge get distinct
-    // ports; picking them one after another can hand out the same port twice.
-    let udp = tokio::net::UdpSocket::bind("127.0.0.1:0").await.unwrap();
-    let bridge = tokio::net::UdpSocket::bind("127.0.0.1:0").await.unwrap();
-    let udp_port = udp.local_addr().unwrap().port();
-    let bridge_port = bridge.local_addr().unwrap().port();
-    drop((udp, bridge));
+    let udp_port = free_port().await;
     let mut server = server_config();
-    server.bridge.quic_bind = Some(format!("127.0.0.1:{bridge_port}"));
     server.http = Some(HttpProxyConfig {
         bind: Some(format!("127.0.0.1:{tcp_port}")),
         http3_bind: Some(format!("127.0.0.1:{udp_port}")),

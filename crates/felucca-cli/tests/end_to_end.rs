@@ -56,12 +56,32 @@ async fn echo_service() -> u16 {
     port
 }
 
-/// A free port, found by binding and releasing.
+/// A loopback port that is currently free for both TCP and UDP.
+///
+/// `bind(0)` draws from the ephemeral range, which outbound connections and
+/// client UDP sockets share, so a port released there can be taken by another
+/// test's `connect` before the fixture binds it. Allocate below every
+/// platform's ephemeral range instead (Linux starts at 32768, macOS and Windows
+/// at 49152) and never hand out the same port twice in one process.
 async fn free_port() -> u16 {
-    let l = TcpListener::bind("127.0.0.1:0").await.unwrap();
-    let port = l.local_addr().unwrap().port();
-    drop(l);
-    port
+    use std::sync::atomic::{AtomicU32, Ordering};
+    const FIRST: u32 = 20_000;
+    const SPAN: u32 = 12_000;
+    static NEXT: AtomicU32 = AtomicU32::new(0);
+    // Start each test binary at a different offset.
+    let base = std::process::id() % SPAN;
+    for _ in 0..SPAN {
+        let port = (FIRST + (base + NEXT.fetch_add(1, Ordering::Relaxed)) % SPAN) as u16;
+        let Ok(tcp) = TcpListener::bind(("127.0.0.1", port)).await else {
+            continue;
+        };
+        let Ok(udp) = tokio::net::UdpSocket::bind(("127.0.0.1", port)).await else {
+            continue;
+        };
+        drop((tcp, udp));
+        return port;
+    }
+    panic!("no free loopback port between {FIRST} and {}", FIRST + SPAN);
 }
 
 fn client_entry(vkey: &str) -> ClientEntry {

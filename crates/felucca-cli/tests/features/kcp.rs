@@ -2,9 +2,7 @@ use super::*;
 
 #[tokio::test]
 async fn kcp_agent_reconnects_after_server_restart_and_rejects_wrong_keys() {
-    let reserved = tokio::net::UdpSocket::bind("127.0.0.1:0").await.unwrap();
-    let bridge = reserved.local_addr().unwrap();
-    drop(reserved);
+    let bridge: std::net::SocketAddr = ([127, 0, 0, 1], free_port().await).into();
     let port = free_port().await;
     let backend = echo().await;
     let mut settings = server_config();

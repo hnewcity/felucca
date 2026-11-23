@@ -6,9 +6,7 @@ async fn bridge_certificate_reload_updates_tls_and_quic_without_dropping_existin
     let port = free_port().await;
     let public = free_port().await;
     let backend = echo().await;
-    let reservation = tokio::net::UdpSocket::bind("127.0.0.1:0").await.unwrap();
-    let quic_port = reservation.local_addr().unwrap().port();
-    drop(reservation);
+    let quic_port = free_port().await;
     let mut server = server_config();
     server.bridge.bind = format!("127.0.0.1:{port}");
     server.bridge.quic_bind = Some(format!("127.0.0.1:{quic_port}"));

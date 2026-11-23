@@ -106,15 +106,19 @@ mod tests {
     async fn other_errors_back_off_and_a_datagram_restores_fast_recovery() {
         let socket = UdpSocket::bind("127.0.0.1:0").await.unwrap();
         let sender = UdpSocket::bind("127.0.0.1:0").await.unwrap();
+        sender
+            .send_to(b"ping", socket.local_addr().unwrap())
+            .await
+            .unwrap();
+        // Wait for the datagram before arming any timer. With the clock paused,
+        // a runtime idle on I/O jumps straight to the next timer, so a datagram
+        // still in flight after the backoff would surface at the 2 s timeout.
+        socket.readable().await.unwrap();
         let mut receiver = Receiver::new();
         for _ in 0..16 {
             receiver.failed(&socket, &io::Error::other("no buffer space"));
         }
         assert_eq!(receiver.delay, MAX_DELAY);
-        sender
-            .send_to(b"ping", socket.local_addr().unwrap())
-            .await
-            .unwrap();
         let mut buffer = [0; 16];
         let start = Instant::now();
         let (len, from) = timeout(MAX_DELAY * 2, receiver.recv_from(&socket, &mut buffer))

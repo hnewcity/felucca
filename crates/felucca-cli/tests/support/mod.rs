@@ -11,13 +11,32 @@ use tokio::{
     io::{AsyncReadExt, AsyncWriteExt},
     net::{TcpListener, TcpStream},
 };
+/// A loopback port that is currently free for both TCP and UDP.
+///
+/// `bind(0)` draws from the ephemeral range, which outbound connections and
+/// client UDP sockets share, so a port released there can be taken by another
+/// test's `connect` before the fixture binds it. Allocate below every
+/// platform's ephemeral range instead (Linux starts at 32768, macOS and Windows
+/// at 49152) and never hand out the same port twice in one process.
 pub(crate) async fn free_port() -> u16 {
-    TcpListener::bind("127.0.0.1:0")
-        .await
-        .unwrap()
-        .local_addr()
-        .unwrap()
-        .port()
+    use std::sync::atomic::{AtomicU32, Ordering};
+    const FIRST: u32 = 20_000;
+    const SPAN: u32 = 12_000;
+    static NEXT: AtomicU32 = AtomicU32::new(0);
+    // Start each test binary at a different offset.
+    let base = std::process::id() % SPAN;
+    for _ in 0..SPAN {
+        let port = (FIRST + (base + NEXT.fetch_add(1, Ordering::Relaxed)) % SPAN) as u16;
+        let Ok(tcp) = TcpListener::bind(("127.0.0.1", port)).await else {
+            continue;
+        };
+        let Ok(udp) = tokio::net::UdpSocket::bind(("127.0.0.1", port)).await else {
+            continue;
+        };
+        drop((tcp, udp));
+        return port;
+    }
+    panic!("no free loopback port between {FIRST} and {}", FIRST + SPAN);
 }
 pub(crate) fn agent(tunnels: &str) -> AgentConfig {
     let mut config: AgentConfig = toml::from_str(&format!("server='127.0.0.1:1'\nvkey='feature-secret'\nkey_id='features'\nreconnect_min='30ms'\nreconnect_max='100ms'\n{tunnels}")).unwrap();
@@ -53,10 +72,7 @@ pub(crate) async fn start(
         let port = if let Some(bind) = configured {
             felucca_core::config::parse_bind(bind).unwrap().port()
         } else {
-            let socket = felucca_transport::udp::bind("127.0.0.1:0").await.unwrap();
-            let port = socket.local_addr().unwrap().port();
-            drop(socket);
-            port
+            free_port().await
         };
         if transport == TransportKind::Kcp {
             server_config.bridge.kcp_bind = Some(format!("127.0.0.1:{port}"));

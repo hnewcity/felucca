@@ -34,9 +34,7 @@ async fn http3_streams_to_http2_backends_and_isolates_bad_requests() {
             });
         }
     });
-    let socket = tokio::net::UdpSocket::bind("127.0.0.1:0").await.unwrap();
-    let port = socket.local_addr().unwrap().port();
-    drop(socket);
+    let port = free_port().await;
     let mut server = server_config();
     server.http = Some(HttpProxyConfig {
         bind: None,

@@ -64,9 +64,7 @@ async fn encoded_datagrams_keep_boundaries_empty_packets_and_association_isolati
         }
     });
     for transport in [TransportKind::Tcp, TransportKind::Quic, TransportKind::Kcp] {
-        let reservation = felucca_transport::udp::bind("127.0.0.1:0").await.unwrap();
-        let port = reservation.local_addr().unwrap().port();
-        drop(reservation);
+        let port = free_port().await;
         let config = agent(&format!(
             "[[tunnel]]\nmode='udp'\nport={port}\nbind='127.0.0.1'\nbackend=[{{addr='{backend}'}}]\n[tunnel.options.payload]\ncompress=true\nencrypt=true"
         ));

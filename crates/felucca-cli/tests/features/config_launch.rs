@@ -86,7 +86,9 @@ fn command() -> Command {
         .stderr(Stdio::piped());
     command
 }
+#[cfg(unix)]
 struct Servers(Vec<Arc<Server>>);
+#[cfg(unix)]
 impl Drop for Servers {
     fn drop(&mut self) {
         for server in &self.0 {

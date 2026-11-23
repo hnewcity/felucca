@@ -81,9 +81,7 @@ async fn custom_dns_reaches_bridge_backends_and_probes_without_bypassing_target_
         let socks = free_port().await;
         let mut server_config = server_config();
         let quic = if matches!(transport, TransportKind::Quic | TransportKind::Kcp) {
-            let udp = tokio::net::UdpSocket::bind("127.0.0.1:0").await.unwrap();
-            let port = udp.local_addr().unwrap().port();
-            drop(udp);
+            let port = free_port().await;
             if transport == TransportKind::Kcp {
                 server_config.bridge.kcp_bind = Some(format!("127.0.0.1:{port}"));
             } else {

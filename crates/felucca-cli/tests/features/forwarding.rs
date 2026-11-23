@@ -87,9 +87,7 @@ async fn udp_preserves_empty_large_packets_and_peer_isolation() {
             backend.send_to(&buffer[..n], peer).await.unwrap();
         }
     });
-    let reservation = felucca_transport::udp::bind("127.0.0.1:0").await.unwrap();
-    let port = reservation.local_addr().unwrap().port();
-    drop(reservation);
+    let port = free_port().await;
     let _running = start(server_config(), agent(&format!("[[tunnel]]\nmode='udp'\nport={port}\nbind='127.0.0.1'\n[[tunnel.backend]]\naddr='{address}'")), TransportKind::Quic).await;
     let mut tasks = tokio::task::JoinSet::new();
     for tag in 1..=3 {
