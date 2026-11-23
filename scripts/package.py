@@ -68,7 +68,7 @@ def package():
         (staging / "docs").mkdir()
         for doc in (ROOT / "docs").glob("*.md"):
             shutil.copy2(doc, staging / "docs" / doc.name)
-        (staging / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+        (staging / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8", newline="\n")
         archive = args.output / (stem + (".zip" if os.name == "nt" else ".tar.gz"))
         temp_archive = Path(scratch) / archive.name
         if os.name == "nt":
@@ -80,8 +80,8 @@ def package():
             with tarfile.open(temp_archive, "w:gz") as output:
                 output.add(staging, arcname=stem)
         os.replace(temp_archive, archive)
-        (args.output / (archive.name + ".sha256")).write_text(f"{digest(archive)}  {archive.name}\n", encoding="ascii")
-        (args.output / (stem + ".manifest.json")).write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+        (args.output / (archive.name + ".sha256")).write_text(f"{digest(archive)}  {archive.name}\n", encoding="ascii", newline="\n")
+        (args.output / (stem + ".manifest.json")).write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8", newline="\n")
         print(json.dumps({"archive": str(archive), **manifest}, indent=2))
 
 
