@@ -28,7 +28,7 @@ impl RotatingFile {
                 "invalid log rotation bounds",
             ));
         }
-        let lock = append(&suffix(path, "rotate.lock"))?;
+        let lock = lock_file(&suffix(path, "rotate.lock"))?;
         fs2::FileExt::try_lock_exclusive(&lock).map_err(|error| {
             io::Error::new(error.kind(), "another process owns this rotating log")
         })?;
@@ -47,6 +47,18 @@ impl RotatingFile {
 fn append(path: &Path) -> io::Result<File> {
     let mut options = OpenOptions::new();
     options.create(true).append(true);
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::OpenOptionsExt;
+        options.mode(0o600);
+    }
+    options.open(path)
+}
+/// Windows `LockFileEx` needs read or write access, which an append-only handle
+/// lacks, so the lock file is opened for writing without truncating it.
+fn lock_file(path: &Path) -> io::Result<File> {
+    let mut options = OpenOptions::new();
+    options.read(true).write(true).create(true).truncate(false);
     #[cfg(unix)]
     {
         use std::os::unix::fs::OpenOptionsExt;
